@@ -7,10 +7,11 @@ import (
 	"github.com/hashicorp/consul/acl"
 	"github.com/hashicorp/consul/agent/structs"
 	"github.com/hashicorp/consul/sdk/testutil/retry"
+	"github.com/hashicorp/go-hclog"
+	"github.com/stretchr/testify/require"
 )
 
 func TestValidateUserEventParams(t *testing.T) {
-	t.Parallel()
 	p := &UserEvent{}
 	err := validateUserEventParams(p)
 	if err == nil || err.Error() != "User event missing name" {
@@ -46,87 +47,101 @@ func TestValidateUserEventParams(t *testing.T) {
 	}
 }
 
-func TestShouldProcessUserEvent(t *testing.T) {
-	t.Parallel()
-	a := NewTestAgent(t, "")
-	defer a.Shutdown()
-
-	srv1 := &structs.NodeService{
-		ID:      "mysql",
-		Service: "mysql",
-		Tags:    []string{"test", "foo", "bar", "master"},
-		Port:    5000,
-	}
-	a.State.AddService(srv1, "")
-
-	p := &UserEvent{}
-	if !a.shouldProcessUserEvent(p) {
-		t.Fatalf("bad")
+func TestUserEventHandler_ShouldProcessUserEvent(t *testing.T) {
+	type testCase struct {
+		name     string
+		event    *UserEvent
+		expected bool
 	}
 
-	// Bad node name
-	p = &UserEvent{
-		NodeFilter: "foobar",
+	cfg := UserEventHandlerConfig{
+		NodeName: "the-node",
+		State: &fakeServiceLister{
+			serviceID:   "the-service-id",
+			serviceTags: []string{"tag1", "tag2"},
+		},
 	}
-	if a.shouldProcessUserEvent(p) {
-		t.Fatalf("bad")
+	u := newUserEventHandler(cfg, hclog.New(nil))
+
+	fn := func(t *testing.T, tc testCase) {
+		require.Equal(t, tc.expected, u.shouldProcessUserEvent(tc.event))
 	}
 
-	// Good node name
-	p = &UserEvent{
-		NodeFilter: "^Node",
-	}
-	if !a.shouldProcessUserEvent(p) {
-		t.Fatalf("bad")
+	var testCases = []testCase{
+		{
+			name:     "empty event",
+			event:    &UserEvent{},
+			expected: true,
+		},
+		{
+			name:  "node filter does not match node",
+			event: &UserEvent{NodeFilter: "foobar"},
+		},
+		{
+			name:     "node filter matches node name",
+			event:    &UserEvent{NodeFilter: "the-node"},
+			expected: true,
+		},
+		{
+			name:  "service filter does not match any services",
+			event: &UserEvent{ServiceFilter: "foobar"},
+		},
+		{
+			name:     "service filter matches a service",
+			event:    &UserEvent{ServiceFilter: ".*-service-id"},
+			expected: true,
+		},
+		{
+			name: "tag filter does not match",
+			event: &UserEvent{
+				ServiceFilter: ".*-service-id",
+				TagFilter:     "foobar",
+			},
+		},
+		{
+			name: "tag filter matches a tag",
+			event: &UserEvent{
+				ServiceFilter: ".*-service-id",
+				TagFilter:     "tag2",
+			},
+			expected: true,
+		},
 	}
 
-	// Bad service name
-	p = &UserEvent{
-		ServiceFilter: "foobar",
-	}
-	if a.shouldProcessUserEvent(p) {
-		t.Fatalf("bad")
-	}
-
-	// Good service name
-	p = &UserEvent{
-		ServiceFilter: ".*sql",
-	}
-	if !a.shouldProcessUserEvent(p) {
-		t.Fatalf("bad")
-	}
-
-	// Bad tag name
-	p = &UserEvent{
-		ServiceFilter: ".*sql",
-		TagFilter:     "slave",
-	}
-	if a.shouldProcessUserEvent(p) {
-		t.Fatalf("bad")
-	}
-
-	// Good service name
-	p = &UserEvent{
-		ServiceFilter: ".*sql",
-		TagFilter:     "master",
-	}
-	if !a.shouldProcessUserEvent(p) {
-		t.Fatalf("bad")
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			fn(t, tc)
+		})
 	}
 }
 
-func TestIngestUserEvent(t *testing.T) {
-	t.Parallel()
-	a := NewTestAgent(t, "")
-	defer a.Shutdown()
+type fakeServiceLister struct {
+	serviceID   string
+	serviceTags []string
+}
+
+func (f *fakeServiceLister) Services(_ *structs.EnterpriseMeta) map[structs.ServiceID]*structs.NodeService {
+	return map[structs.ServiceID]*structs.NodeService{
+		{ID: f.serviceID}: {
+			ID:   f.serviceID,
+			Tags: f.serviceTags,
+		},
+	}
+}
+
+func TestUserEventHandler_IngestUserEvent(t *testing.T) {
+	cfg := UserEventHandlerConfig{
+		Notifier: new(NotifyGroup),
+	}
+	u := newUserEventHandler(cfg, hclog.New(nil))
 
 	for i := 0; i < 512; i++ {
 		msg := &UserEvent{LTime: uint64(i), Name: "test"}
-		a.ingestUserEvent(msg)
-		if a.LastUserEvent() != msg {
+		u.ingestUserEvent(msg)
+		if u.lastUserEvent() != msg {
 			t.Fatalf("bad: %#v", msg)
 		}
-		events := a.UserEvents()
+		events := u.UserEvents()
 
 		expectLen := 256
 		if i < 256 {
@@ -146,7 +161,8 @@ func TestIngestUserEvent(t *testing.T) {
 	}
 }
 
-func TestFireReceiveEvent(t *testing.T) {
+// TODO: move this with Agent.UserEvent
+func TestAgent_UserEvent_FireReceiveEvent(t *testing.T) {
 	t.Parallel()
 	a := NewTestAgent(t, "")
 	defer a.Shutdown()
@@ -171,18 +187,19 @@ func TestFireReceiveEvent(t *testing.T) {
 		t.Fatalf("err: %v", err)
 	}
 	retry.Run(t, func(r *retry.R) {
-		if got, want := len(a.UserEvents()), 1; got != want {
+		if got, want := len(a.userEventHandler.UserEvents()), 1; got != want {
 			r.Fatalf("got %d events want %d", got, want)
 		}
 	})
 
-	last := a.LastUserEvent()
+	last := a.userEventHandler.lastUserEvent()
 	if last.ID != p2.ID {
 		t.Fatalf("bad: %#v", last)
 	}
 }
 
-func TestUserEventToken(t *testing.T) {
+// TODO: move this with Agent.UserEvent
+func TestAgent_UserEvent_Token(t *testing.T) {
 	t.Parallel()
 	a := NewTestAgent(t, TestACLConfig()+`
 		acl_default_policy = "deny"
