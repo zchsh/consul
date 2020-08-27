@@ -19,6 +19,7 @@ import (
 
 	"github.com/hashicorp/consul/agent/dns"
 	"github.com/hashicorp/consul/agent/router"
+	"github.com/hashicorp/consul/agent/rpcclient/kv"
 	"github.com/hashicorp/go-connlimit"
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/go-memdb"
@@ -232,7 +233,6 @@ type Agent struct {
 
 	// TODO: use an interface
 	userEventHandler *userEventHandler
-	eventNotify      *NotifyGroup
 
 	shutdown     bool
 	shutdownCh   chan struct{}
@@ -428,13 +428,31 @@ func (a *Agent) Start(ctx context.Context) error {
 	// regular and on-demand state synchronizations (anti-entropy).
 	a.sync = ae.NewStateSyncer(a.State, c.AEInterval, a.shutdownCh, a.logger)
 
+	// TODO: move userEventHandler before Agent.New()
+	remoteExec := &remoteExecHandler{
+		logger: a.logger,
+		config: RemoteExecConfig{
+			NodeName:     a.config.NodeName,
+			Datacenter:   a.config.Datacenter,
+			AgentTokener: a.tokens,
+			KV:           &kv.Client{NetRPC: a},
+		},
+	}
+	a.userEventHandler = newUserEventHandler(UserEventHandlerConfig{
+		NodeName:          a.config.NodeName,
+		DisableRemoteExec: a.config.DisableRemoteExec,
+		Services:          a.State,
+		HandleRemoteExec:  remoteExec.handle,
+	}, a.logger)
+
 	// create the config for the rpc server/client
 	consulCfg, err := newConsulConfig(a.config, a.logger)
 	if err != nil {
 		return err
 	}
 
-	// TODO: consulCfg.UserEventHandler = userEventHandler.Submit
+	consulCfg.UserEventHandler = a.userEventHandler.SubmitFunc(
+		&lib.StopChannelContext{StopCh: a.shutdownCh})
 
 	// ServerUp is used to inform that a new consul server is now
 	// up. This can be used to speed up the sync process if we are blocking
@@ -573,7 +591,7 @@ func (a *Agent) Start(ctx context.Context) error {
 	go a.reapServices()
 
 	// Start handling events.
-	go a.userEventHandler.Start()
+	go a.userEventHandler.Start(&lib.StopChannelContext{StopCh: a.ShutdownCh()})
 
 	// Start sending network coordinate to the server.
 	if !c.DisableCoordinates {

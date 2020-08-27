@@ -56,7 +56,7 @@ func TestUserEventHandler_ShouldProcessUserEvent(t *testing.T) {
 
 	cfg := UserEventHandlerConfig{
 		NodeName: "the-node",
-		State: &fakeServiceLister{
+		Services: &fakeServiceLister{
 			serviceID:   "the-service-id",
 			serviceTags: []string{"tag1", "tag2"},
 		},
@@ -130,9 +130,7 @@ func (f *fakeServiceLister) Services(_ *structs.EnterpriseMeta) map[structs.Serv
 }
 
 func TestUserEventHandler_IngestUserEvent(t *testing.T) {
-	cfg := UserEventHandlerConfig{
-		Notifier: new(NotifyGroup),
-	}
+	cfg := UserEventHandlerConfig{}
 	u := newUserEventHandler(cfg, hclog.New(nil))
 
 	for i := 0; i < 512; i++ {
