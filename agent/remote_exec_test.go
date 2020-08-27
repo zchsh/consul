@@ -13,16 +13,8 @@ import (
 	"github.com/hashicorp/consul/sdk/testutil/retry"
 	"github.com/hashicorp/consul/testrpc"
 	"github.com/hashicorp/go-hclog"
-	"github.com/hashicorp/go-uuid"
 	"github.com/stretchr/testify/require"
 )
-
-func generateUUID(t *testing.T) (ret string) {
-	t.Helper()
-	ret, err := uuid.GenerateUUID()
-	require.NoError(t, err, "Unable to generate a UUID")
-	return ret
-}
 
 func TestRexecWriter(t *testing.T) {
 	// t.Parallel() // timing test. no parallel
@@ -97,9 +89,10 @@ func TestRexecWriter(t *testing.T) {
 }
 
 func TestRemoteExecHandler_GetExecSpec_Retries(t *testing.T) {
-	event := &remoteExecEvent{
-		Prefix:  "_rexec",
-		Session: "the-session",
+	event := remoteExecEvent{
+		Datacenter: "the-dc",
+		Prefix:     "_rexec",
+		Session:    "the-session",
 	}
 
 	spec := &remoteExecSpec{
@@ -117,12 +110,9 @@ func TestRemoteExecHandler_GetExecSpec_Retries(t *testing.T) {
 		},
 	}
 	e := &remoteExecHandler{
-		logger: hclog.New(nil),
-		config: RemoteExecConfig{
-			Datacenter:   "the-dc",
-			KV:           fake,
-			AgentTokener: new(token.Store),
-		},
+		Logger:       hclog.New(nil),
+		KV:           fake,
+		AgentTokener: new(token.Store),
 	}
 
 	var actual remoteExecSpec
@@ -169,20 +159,18 @@ func (f *fakeKV) Apply(_ context.Context, req structs.KVSRequest) (bool, error) 
 }
 
 func TestRemoteExecHandler_Writes(t *testing.T) {
-	event := &remoteExecEvent{
-		Prefix:  "_rexec",
-		Session: "the-session",
+	event := remoteExecEvent{
+		Prefix:     "_rexec",
+		Session:    "the-session",
+		NodeName:   "node-name",
+		Datacenter: "dc1",
 	}
 
 	fake := &fakeKV{}
 	e := &remoteExecHandler{
-		logger: hclog.New(nil),
-		config: RemoteExecConfig{
-			NodeName:     "node-name",
-			Datacenter:   "dc1",
-			KV:           fake,
-			AgentTokener: new(token.Store),
-		},
+		Logger:       hclog.New(nil),
+		KV:           fake,
+		AgentTokener: new(token.Store),
 	}
 
 	require.True(t, e.writeAck(event))
@@ -249,12 +237,14 @@ func testHandleRemoteExec(t *testing.T, command string, expectedSubstring string
 	defer a.Shutdown()
 	testrpc.WaitForTestAgent(t, a.RPC, "dc1")
 
-	handler := a.userEventHandler.config.HandleRemoteExec
+	handler := a.userEventHandler.deps.HandleRemoteExec
 
 	retry.Run(t, func(r *retry.R) {
-		event := &remoteExecEvent{
-			Prefix:  "_rexec",
-			Session: makeRexecSession(t, a.Agent, ""),
+		event := remoteExecEvent{
+			NodeName:   a.config.NodeName,
+			Datacenter: a.config.Datacenter,
+			Prefix:     "_rexec",
+			Session:    makeRexecSession(t, a.Agent, ""),
 		}
 		defer destroySession(t, a.Agent, event.Session, "")
 
@@ -271,16 +261,7 @@ func testHandleRemoteExec(t *testing.T, command string, expectedSubstring string
 			r.Fatalf("err: %v", err)
 		}
 
-		buf, err = json.Marshal(event)
-		if err != nil {
-			r.Fatalf("err: %v", err)
-		}
-		msg := &UserEvent{
-			ID:      generateUUID(t),
-			Payload: buf,
-		}
-
-		handler(msg)
+		handler(event)
 
 		// Verify we have an ack
 		key = "_rexec/" + event.Session + "/" + a.Config.NodeName + "/ack"
