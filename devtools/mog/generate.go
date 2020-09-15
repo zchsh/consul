@@ -20,7 +20,7 @@ func generateFiles(cfg config, targets map[string]targetPkg) error {
 		for _, cfg := range group {
 			t := targets[cfg.Target.Package].Structs[cfg.Target.Struct]
 			if t.Name == "" {
-				return fmt.Errorf("unable to locate target %v for %v", cfg.Target, cfg.Source)
+				return fmt.Errorf("failed to locate target %v for %v", cfg.Target, cfg.Source)
 			}
 
 			gen, err := generateConversion(cfg, t)
@@ -93,6 +93,11 @@ func generateConversion(cfg structConfig, t targetStruct) (generated, error) {
 	// TODO: would it make sense to store the fields as a map instead of building it here?
 	sourceFields := sourceFieldMap(cfg.Fields)
 	for _, field := range t.Fields {
+		// TODO: test case to include ignored field
+		if _, contains := cfg.IgnoreFields[field.Name()]; contains {
+			continue
+		}
+
 		sourceField := sourceFields[field.Name()]
 		// TODO: skip missing source fields, and record the field name for later
 		// and error if the field is not in ignore-fields

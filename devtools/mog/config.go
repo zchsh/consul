@@ -22,10 +22,20 @@ type structConfig struct {
 	Target           target
 	Output           string
 	FuncNameFragment string
-	IgnoreFields     []string
+	IgnoreFields     stringSet
 	FuncFrom         string
 	FuncTo           string
 	Fields           []fieldConfig
+}
+
+type stringSet map[string]struct{}
+
+func newStringSetFromSlice(s []string) stringSet {
+	ss := make(stringSet, len(s))
+	for _, i := range s {
+		ss[i] = struct{}{}
+	}
+	return ss
 }
 
 type target struct {
@@ -106,7 +116,7 @@ func parseStructAnnotation(name string, doc []*ast.Comment) (structConfig, error
 		case "name":
 			c.FuncNameFragment = value
 		case "ignore-fields":
-			c.IgnoreFields = strings.Split(value, ",")
+			c.IgnoreFields = newStringSetFromSlice(strings.Split(value, ","))
 		case "func-from":
 			c.FuncFrom = value
 		case "func-to":
