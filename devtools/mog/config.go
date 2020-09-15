@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"go/ast"
+	"go/format"
+	"go/token"
 	"strings"
 )
 
@@ -60,13 +63,13 @@ func configsFromAnnotations(pkg sourcePkg) (config, error) {
 		strct := pkg.Structs[name]
 		cfg, err := parseStructAnnotation(name, strct.Doc)
 		if err != nil {
-			return c, fmt.Errorf("from source %v: %w", name, err)
+			return c, fmt.Errorf("from source struct %v: %w", name, err)
 		}
 
 		for _, field := range strct.Fields {
 			f, err := parseFieldAnnotation(field)
 			if err != nil {
-				return c, fmt.Errorf("from source %v.%v: %w", name, fieldNameFromAST(field.Names), err)
+				return c, fmt.Errorf("from source struct %v: %w", name, err)
 			}
 			cfg.Fields = append(cfg.Fields, f)
 		}
@@ -75,13 +78,6 @@ func configsFromAnnotations(pkg sourcePkg) (config, error) {
 	}
 	// TODO: validate config - required values
 	return c, nil
-}
-
-func fieldNameFromAST(names []*ast.Ident) string {
-	if len(names) == 0 {
-		return "unknown"
-	}
-	return names[0].Name
 }
 
 func parseStructAnnotation(name string, doc []*ast.Comment) (structConfig, error) {
@@ -126,10 +122,12 @@ func parseStructAnnotation(name string, doc []*ast.Comment) (structConfig, error
 func parseFieldAnnotation(field *ast.Field) (fieldConfig, error) {
 	var c fieldConfig
 
-	if len(field.Names) == 0 {
-		return c, fmt.Errorf("no field name for type %v", field.Type)
+	name, err := fieldName(field)
+	if err != nil {
+		return c, err
 	}
-	c.SourceName = field.Names[0].Name
+
+	c.SourceName = name
 	c.SourceType = field.Type
 
 	text := getFieldAnnotationLine(field.Doc)
@@ -157,6 +155,26 @@ func parseFieldAnnotation(field *ast.Field) (fieldConfig, error) {
 		}
 	}
 	return c, nil
+}
+
+// TODO test cases for embedded types
+func fieldName(field *ast.Field) (string, error) {
+	if len(field.Names) > 0 {
+		return field.Names[0].Name, nil
+	}
+
+	switch n := field.Type.(type) {
+	case *ast.Ident:
+		return n.Name, nil
+	case *ast.SelectorExpr:
+		if ident, ok := n.X.(*ast.Ident); ok {
+			return ident.Name, nil
+		}
+	}
+
+	buf := new(bytes.Buffer)
+	_ = format.Node(buf, new(token.FileSet), field.Type)
+	return "", fmt.Errorf("failed to determine field name for type %v", buf.String())
 }
 
 func getFieldAnnotationLine(doc *ast.CommentGroup) string {
