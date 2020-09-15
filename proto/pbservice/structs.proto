@@ -21,7 +21,14 @@ option (gogoproto.goproto_unrecognized_all) = false;
 option (gogoproto.goproto_getters_all) = false;
 option (gogoproto.goproto_sizecache_all) = false;
 
-// Used to return information about a node
+// Node contains information about a node.
+//
+// mog annotation:
+//
+// target=github.com/hashicorp/consul/agent/structs.Node
+// output=structs.gen.go
+// name=Structs
+// ignore-fields=RaftIndex
 message Node {
   string ID = 1
       [(gogoproto.casttype) = "github.com/hashicorp/consul/types.NodeID"];
