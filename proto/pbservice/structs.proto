@@ -39,6 +39,7 @@ message Node {
   map<string, string> TaggedAddresses = 5;
   map<string, string> Meta = 6;
 
+  // mog: func-to=RaftIndexToStructs func-from=NewRaftIndexFromStructs
   common.RaftIndex RaftIndex = 7
       [(gogoproto.embed) = true, (gogoproto.nullable) = false, (gogoproto.moretags) = "bexpr:\"-\""];
 }

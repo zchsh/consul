@@ -39,12 +39,13 @@ const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 // name=Structs
 // ignore-fields=RaftIndex
 type Node struct {
-	ID                 github_com_hashicorp_consul_types.NodeID `protobuf:"bytes,1,opt,name=ID,proto3,casttype=github.com/hashicorp/consul/types.NodeID" json:"ID,omitempty"`
-	Node               string                                   `protobuf:"bytes,2,opt,name=Node,proto3" json:"Node,omitempty"`
-	Address            string                                   `protobuf:"bytes,3,opt,name=Address,proto3" json:"Address,omitempty"`
-	Datacenter         string                                   `protobuf:"bytes,4,opt,name=Datacenter,proto3" json:"Datacenter,omitempty"`
-	TaggedAddresses    map[string]string                        `protobuf:"bytes,5,rep,name=TaggedAddresses,proto3" json:"TaggedAddresses,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Meta               map[string]string                        `protobuf:"bytes,6,rep,name=Meta,proto3" json:"Meta,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	ID              github_com_hashicorp_consul_types.NodeID `protobuf:"bytes,1,opt,name=ID,proto3,casttype=github.com/hashicorp/consul/types.NodeID" json:"ID,omitempty"`
+	Node            string                                   `protobuf:"bytes,2,opt,name=Node,proto3" json:"Node,omitempty"`
+	Address         string                                   `protobuf:"bytes,3,opt,name=Address,proto3" json:"Address,omitempty"`
+	Datacenter      string                                   `protobuf:"bytes,4,opt,name=Datacenter,proto3" json:"Datacenter,omitempty"`
+	TaggedAddresses map[string]string                        `protobuf:"bytes,5,rep,name=TaggedAddresses,proto3" json:"TaggedAddresses,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Meta            map[string]string                        `protobuf:"bytes,6,rep,name=Meta,proto3" json:"Meta,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	// mog: func-to=RaftIndexToStructs func-from=NewRaftIndexFromStructs
 	pbcommon.RaftIndex `protobuf:"bytes,7,opt,name=RaftIndex,proto3,embedded=RaftIndex" json:"RaftIndex" bexpr:"-"`
 }
 
