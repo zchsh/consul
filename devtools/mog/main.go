@@ -37,6 +37,10 @@ type options struct {
 
 func (o options) handlePackageLoadErrors(pkg *packages.Package) error {
 	if o.ignorePackageLoadErrors {
+		// TODO: setup logger
+		for _, err := range pkg.Errors {
+			log.Println(err.Error())
+		}
 		return nil
 	}
 	return packageLoadErrors(pkg)
