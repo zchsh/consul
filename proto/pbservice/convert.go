@@ -147,3 +147,57 @@ func NewCheckTypesFromStructs(t structs.CheckTypes) []*CheckType {
 	}
 	return s
 }
+
+// TODO: handle this with mog
+func ConnectProxyConfigPtrToStructs(s *ConnectProxyConfig) *structs.ConnectProxyConfig {
+	if s == nil {
+		return nil
+	}
+	t := ConnectProxyConfigToStructs(*s)
+	return &t
+}
+
+// TODO: handle this with mog
+func NewConnectProxyConfigPtrFromStructs(t *structs.ConnectProxyConfig) *ConnectProxyConfig {
+	if t == nil {
+		return nil
+	}
+	s := NewConnectProxyConfigFromStructs(*t)
+	return &s
+}
+
+// TODO: handle this with mog
+func ServiceConnectPtrToStructs(s *ServiceConnect) *structs.ServiceConnect {
+	if s == nil {
+		return nil
+	}
+	t := ServiceConnectToStructs(*s)
+	return &t
+}
+
+// TODO: handle this with mog
+func NewServiceConnectPtrFromStructs(t *structs.ServiceConnect) *ServiceConnect {
+	if t == nil {
+		return nil
+	}
+	s := NewServiceConnectFromStructs(*t)
+	return &s
+}
+
+// TODO: handle this with mog
+func ServiceDefinitionPtrToStructs(s *ServiceDefinition) *structs.ServiceDefinition {
+	if s == nil {
+		return nil
+	}
+	t := ServiceDefinitionToStructs(*s)
+	return &t
+}
+
+// TODO: handle this with mog
+func NewServiceDefinitionPtrFromStructs(t *structs.ServiceDefinition) *ServiceDefinition {
+	if t == nil {
+		return nil
+	}
+	s := NewServiceDefinitionFromStructs(*t)
+	return &s
+}

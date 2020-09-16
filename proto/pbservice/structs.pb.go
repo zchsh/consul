@@ -157,10 +157,12 @@ type ServiceDefinition struct {
 	// in the other case. ProxyConfig may be a more natural name here, but it's
 	// confusing for the UX because one of the fields in ConnectProxyConfig is
 	// also called just "Config"
+	// mog: func-to=ConnectProxyConfigPtrToStructs func-from=NewConnectProxyConfigPtrFromStructs
 	Proxy *ConnectProxyConfig `protobuf:"bytes,14,opt,name=Proxy,proto3" json:"Proxy,omitempty"`
 	// mog: func-to=EnterpriseMetaToStructs func-from=NewEnterpriseMetaFromStructs
 	EnterpriseMeta pbcommon.EnterpriseMeta `protobuf:"bytes,17,opt,name=EnterpriseMeta,proto3" json:"EnterpriseMeta"`
-	Connect        *ServiceConnect         `protobuf:"bytes,15,opt,name=Connect,proto3" json:"Connect,omitempty"`
+	// mog: func-to=ServiceConnectPtrToStructs func-from=NewServiceConnectPtrFromStructs
+	Connect *ServiceConnect `protobuf:"bytes,15,opt,name=Connect,proto3" json:"Connect,omitempty"`
 }
 
 func (m *ServiceDefinition) Reset()         { *m = ServiceDefinition{} }
@@ -661,6 +663,7 @@ type ServiceConnect struct {
 	// boilerplate needed to register a sidecar service separately, but the end
 	// result is identical to just making a second service registration via any
 	// other means.
+	// mog: func-to=ServiceDefinitionPtrToStructs func-from=NewServiceDefinitionPtrFromStructs
 	SidecarService *ServiceDefinition `protobuf:"bytes,3,opt,name=SidecarService,proto3" json:"SidecarService,omitempty"`
 }
 

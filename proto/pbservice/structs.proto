@@ -85,11 +85,13 @@ message ServiceDefinition {
   // in the other case. ProxyConfig may be a more natural name here, but it's
   // confusing for the UX because one of the fields in ConnectProxyConfig is
   // also called just "Config"
+  // mog: func-to=ConnectProxyConfigPtrToStructs func-from=NewConnectProxyConfigPtrFromStructs
   ConnectProxyConfig Proxy = 14;
 
   // mog: func-to=EnterpriseMetaToStructs func-from=NewEnterpriseMetaFromStructs
   common.EnterpriseMeta EnterpriseMeta = 17 [(gogoproto.nullable) = false];
 
+  // mog: func-to=ServiceConnectPtrToStructs func-from=NewServiceConnectPtrFromStructs
   ServiceConnect Connect = 15;
 }
 
@@ -356,6 +358,7 @@ message ServiceConnect {
   // boilerplate needed to register a sidecar service separately, but the end
   // result is identical to just making a second service registration via any
   // other means.
+  // mog: func-to=ServiceDefinitionPtrToStructs func-from=NewServiceDefinitionPtrFromStructs
   ServiceDefinition SidecarService = 3;
 }
 
