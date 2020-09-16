@@ -1,6 +1,7 @@
 package pbservice
 
 import (
+	"github.com/gogo/protobuf/types"
 	"github.com/hashicorp/consul/agent/structs"
 	"github.com/hashicorp/consul/proto/pbcommon"
 )
@@ -77,7 +78,7 @@ func NewMapStringServiceAddressFromStructs(t map[string]structs.ServiceAddress) 
 
 // TODO: handle this with mog
 func ExposePathSliceToStructs(s []ExposePath) []structs.ExposePath {
-	t := make([]structs.ExposePath, 0, len(s))
+	t := make([]structs.ExposePath, len(s))
 	for i, v := range s {
 		t[i] = ExposePathToStructs(v)
 	}
@@ -86,9 +87,37 @@ func ExposePathSliceToStructs(s []ExposePath) []structs.ExposePath {
 
 // TODO: handle this with mog
 func NewExposePathSliceFromStructs(t []structs.ExposePath) []ExposePath {
-	s := make([]ExposePath, 0, len(t))
+	s := make([]ExposePath, len(t))
 	for i, v := range t {
 		s[i] = NewExposePathFromStructs(v)
+	}
+	return s
+}
+
+func MapStringInterfaceToStructs(s *types.Struct) map[string]interface{} {
+	// TODO: how to convert these?
+	return nil
+}
+
+func NewMapStringInterfaceFromStructs(t map[string]interface{}) *types.Struct {
+	// TODO: how to convert these?
+	return nil
+}
+
+// TODO: handle this with mog
+func UpstreamsToStructs(s []Upstream) structs.Upstreams {
+	t := make(structs.Upstreams, len(s))
+	for i, v := range s {
+		t[i] = UpstreamToStructs(v)
+	}
+	return t
+}
+
+// TODO: handle this with mog
+func NewUpstreamsFromStructs(t structs.Upstreams) []Upstream {
+	s := make([]Upstream, len(t))
+	for i, v := range t {
+		s[i] = NewUpstreamFromStructs(v)
 	}
 	return s
 }

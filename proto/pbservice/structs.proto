@@ -265,10 +265,12 @@ message ConnectProxyConfig {
 
   // Config is the arbitrary configuration data provided with the proxy
   // registration.
+  // mog: func-to=MapStringInterfaceToStructs func-from=NewMapStringInterfaceFromStructs
   google.protobuf.Struct Config = 5 [(gogoproto.nullable) = true];
 
   // Upstreams describes any upstream dependencies the proxy instance should
   // setup.
+  // mog: func-to=UpstreamsToStructs func-from=NewUpstreamsFromStructs
   repeated Upstream Upstreams = 6 [(gogoproto.nullable) = false];
 
   // MeshGateway defines the mesh gateway configuration for this upstream
@@ -278,10 +280,18 @@ message ConnectProxyConfig {
   ExposeConfig Expose = 8 [(gogoproto.nullable) = false];
 }
 
+// TODO: move to connect.proto
 // Upstream represents a single upstream dependency for a service or proxy. It
 // describes the mechanism used to discover instances to communicate with (the
 // Target) as well as any potential client configuration that may be useful such
 // as load balancer options, timeouts etc.
+//
+// mog annotation:
+//
+// target=github.com/hashicorp/consul/agent/structs.Upstream
+// output=connect.gen.go
+// name=Structs
+// ignore-fields=IngressHosts
 message Upstream {
   // Destination fields are the required ones for determining what this upstream
   // points to. Depending on DestinationType some other fields below might
@@ -311,11 +321,11 @@ message Upstream {
   // Config is an opaque config that is specific to the proxy process being run.
   // It can be used to pass arbitrary configuration for this specific upstream
   // to the proxy.
-  google.protobuf.Struct Config = 7
-      [(gogoproto.nullable) = true, (gogoproto.moretags) = "bexpr:\"-\""];
+  // mog: func-to=MapStringInterfaceToStructs func-from=NewMapStringInterfaceFromStructs
+  google.protobuf.Struct Config = 7 [(gogoproto.nullable) = true];
 
   // MeshGateway is the configuration for mesh gateway usage of this upstream
-  MeshGatewayConfig MeshGateway = 8;
+  MeshGatewayConfig MeshGateway = 8  [(gogoproto.nullable) = false];
 }
 
 // ServiceConnect are the shared Connect settings between all service
