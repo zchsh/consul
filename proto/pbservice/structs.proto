@@ -21,6 +21,14 @@ option (gogoproto.goproto_unrecognized_all) = false;
 option (gogoproto.goproto_getters_all) = false;
 option (gogoproto.goproto_sizecache_all) = false;
 
+// CheckServiceNode is used to provide the node, its service
+// definition, as well as a HealthCheck that is associated.
+message CheckServiceNode {
+  Node Node = 1;
+  NodeService Service = 2;
+  repeated HealthCheck Checks = 3;
+}
+
 // Node contains information about a node.
 //
 // mog annotation:
@@ -85,6 +93,12 @@ message ServiceAddress {
 }
 
 // HealthCheck represents a single check on a given node
+//
+// mog annotation:
+//
+// target=github.com/hashicorp/consul/agent/structs.HealthCheck
+// output=structs.gen.go
+// name=Structs
 message HealthCheck {
   string Node = 1;
   string CheckID = 2
@@ -104,6 +118,7 @@ message HealthCheck {
 
   common.EnterpriseMeta EnterpriseMeta = 13;
 
+  // mog: func-to=RaftIndexToStructs func-from=NewRaftIndexFromStructs
   common.RaftIndex RaftIndex = 11
       [(gogoproto.embed) = true, (gogoproto.nullable) = false, (gogoproto.moretags) = "bexpr:\"-\""];
 }
@@ -112,16 +127,27 @@ message HeaderValue {
   repeated string Value = 1;
 }
 
+// HealthCheckDefinition of a single HealthCheck.
+//
+// mog annotation:
+//
+// target=github.com/hashicorp/consul/agent/structs.HealthCheckDefinition
+// output=structs.gen.go
+// name=Structs
 message HealthCheckDefinition {
-  string HTTP = 1 [(gogoproto.jsontag) = ",omitempty"];
-  bool TLSSkipVerify = 2 [(gogoproto.jsontag) = ",omitempty"];
+  string HTTP = 1;
+  bool TLSSkipVerify = 2;
+
+  // mog: func-to=MapHeadersToStructs func-from=NewMapHeadersFromStructs
   map<string, HeaderValue> Header = 3 [(gogoproto.nullable) = false];
-  string Method = 4 [(gogoproto.jsontag) = ",omitempty"];
-  string Body = 18 [(gogoproto.jsontag) = ",omitempty"];
-  string TCP = 5 [(gogoproto.jsontag) = ",omitempty"];
+  string Method = 4;
+  string Body = 18;
+  string TCP = 5;
   google.protobuf.Duration Interval = 6
       [(gogoproto.stdduration) = true, (gogoproto.nullable) = false];
-  uint32 OutputMaxSize = 9;
+
+  // mog: func-to=uint func-from=uint64
+  uint64 OutputMaxSize = 9;
   google.protobuf.Duration Timeout = 7
       [(gogoproto.stdduration) = true, (gogoproto.nullable) = false];
   google.protobuf.Duration DeregisterCriticalServiceAfter = 8
@@ -135,14 +161,6 @@ message HealthCheckDefinition {
   string AliasService = 16;
   google.protobuf.Duration TTL = 17
       [(gogoproto.stdduration) = true, (gogoproto.nullable) = false];
-}
-
-// CheckServiceNode is used to provide the node, its service
-// definition, as well as a HealthCheck that is associated.
-message CheckServiceNode {
-  Node Node = 1;
-  NodeService Service = 2;
-  repeated HealthCheck Checks = 3;
 }
 
 // NodeService is a service provided by a node
