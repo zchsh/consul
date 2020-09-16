@@ -159,23 +159,27 @@ message HealthCheckDefinition {
 }
 
 // NodeService is a service provided by a node
+//
+// mog annotation:
+//
+// target=github.com/hashicorp/consul/agent/structs.NodeService
+// output=structs.gen.go
+// name=Structs
 message NodeService {
   // Kind is the kind of service this is. Different kinds of services may
   // have differing validation, DNS behavior, etc. An empty kind will default
   // to the Default kind. See ServiceKind for the full list of kinds.
-  string Kind = 1 [
-    (gogoproto.casttype) =
-        "github.com/hashicorp/consul/agent/structs.ServiceKind",
-    (gogoproto.jsontag) = ",omitempty"
-  ];
+  string Kind = 1 [(gogoproto.casttype) = "github.com/hashicorp/consul/agent/structs.ServiceKind"];
 
   string ID = 2;
   string Service = 3;
   repeated string Tags = 4;
   string Address = 5;
-  map<string, ServiceAddress> TaggedAddresses = 15;
+  map<string, ServiceAddress> TaggedAddresses = 15 [(gogoproto.nullable) = false];
   map<string, string> Meta = 6;
   int32 Port = 7 [(gogoproto.casttype) = "int"];
+
+  // mog: func-to=WeightsPtrToStructs func-from=NewWeightsPtrFromStructs
   Weights Weights = 8;
   bool EnableTagOverride = 9;
 
@@ -212,12 +216,13 @@ message NodeService {
   // internal only. Right now our agent endpoints return api structs which don't
   // include it but this is a safety net incase we change that or there is
   // somewhere this is used in API output.
-  bool LocallyRegisteredAsSidecar = 13 [(gogoproto.moretags) = "bexpr:\"-\""];
+  bool LocallyRegisteredAsSidecar = 13;
 
-  common.EnterpriseMeta EnterpriseMeta = 16;
+  // mog: func-to=EnterpriseMetaToStructs func-from=NewEnterpriseMetaFromStructs
+  common.EnterpriseMeta EnterpriseMeta = 16 [(gogoproto.nullable) = false];
 
-  common.RaftIndex RaftIndex = 14
-      [(gogoproto.embed) = true, (gogoproto.nullable) = false, (gogoproto.moretags) = "bexpr:\"-\""];
+  // mog: func-to=RaftIndexToStructs func-from=NewRaftIndexFromStructs
+  common.RaftIndex RaftIndex = 14 [(gogoproto.embed) = true, (gogoproto.nullable) = false];
 }
 
 // ConnectProxyConfig describes the configuration needed for any proxy managed

@@ -34,3 +34,25 @@ func NewMapHeadersFromStructs(t map[string][]string) map[string]HeaderValue {
 	}
 	return s
 }
+
+// TODO: handle this with mog, once mog handles pointers
+func WeightsPtrToStructs(s *Weights) *structs.Weights {
+	if s == nil {
+		return nil
+	}
+	var t structs.Weights
+	t.Passing = s.Passing
+	t.Warning = s.Warning
+	return &t
+}
+
+// TODO: handle this with mog, once mog handles pointers
+func NewWeightsPtrFromStructs(t *structs.Weights) *Weights {
+	if t == nil {
+		return nil
+	}
+	var s Weights
+	s.Passing = t.Passing
+	s.Warning = t.Warning
+	return &s
+}
