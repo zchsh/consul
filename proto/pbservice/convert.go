@@ -56,3 +56,21 @@ func NewWeightsPtrFromStructs(t *structs.Weights) *Weights {
 	s.Warning = t.Warning
 	return &s
 }
+
+// TODO: handle this with mog
+func MapStringServiceAddressToStructs(s map[string]ServiceAddress) map[string]structs.ServiceAddress {
+	t := make(map[string]structs.ServiceAddress, len(s))
+	for k, v := range s {
+		t[k] = structs.ServiceAddress{Address: v.Address, Port: v.Port}
+	}
+	return t
+}
+
+// TODO: handle this with mog
+func NewMapStringServiceAddressFromStructs(t map[string]structs.ServiceAddress) map[string]ServiceAddress {
+	s := make(map[string]ServiceAddress, len(t))
+	for k, v := range t {
+		s[k] = ServiceAddress{Address: v.Address, Port: v.Port}
+	}
+	return s
+}

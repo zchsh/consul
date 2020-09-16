@@ -394,14 +394,15 @@ type NodeService struct {
 	// Kind is the kind of service this is. Different kinds of services may
 	// have differing validation, DNS behavior, etc. An empty kind will default
 	// to the Default kind. See ServiceKind for the full list of kinds.
-	Kind            github_com_hashicorp_consul_agent_structs.ServiceKind `protobuf:"bytes,1,opt,name=Kind,proto3,casttype=github.com/hashicorp/consul/agent/structs.ServiceKind" json:"Kind,omitempty"`
-	ID              string                                                `protobuf:"bytes,2,opt,name=ID,proto3" json:"ID,omitempty"`
-	Service         string                                                `protobuf:"bytes,3,opt,name=Service,proto3" json:"Service,omitempty"`
-	Tags            []string                                              `protobuf:"bytes,4,rep,name=Tags,proto3" json:"Tags,omitempty"`
-	Address         string                                                `protobuf:"bytes,5,opt,name=Address,proto3" json:"Address,omitempty"`
-	TaggedAddresses map[string]ServiceAddress                             `protobuf:"bytes,15,rep,name=TaggedAddresses,proto3" json:"TaggedAddresses" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Meta            map[string]string                                     `protobuf:"bytes,6,rep,name=Meta,proto3" json:"Meta,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Port            int                                                   `protobuf:"varint,7,opt,name=Port,proto3,casttype=int" json:"Port,omitempty"`
+	Kind    github_com_hashicorp_consul_agent_structs.ServiceKind `protobuf:"bytes,1,opt,name=Kind,proto3,casttype=github.com/hashicorp/consul/agent/structs.ServiceKind" json:"Kind,omitempty"`
+	ID      string                                                `protobuf:"bytes,2,opt,name=ID,proto3" json:"ID,omitempty"`
+	Service string                                                `protobuf:"bytes,3,opt,name=Service,proto3" json:"Service,omitempty"`
+	Tags    []string                                              `protobuf:"bytes,4,rep,name=Tags,proto3" json:"Tags,omitempty"`
+	Address string                                                `protobuf:"bytes,5,opt,name=Address,proto3" json:"Address,omitempty"`
+	// mog: func-to=MapStringServiceAddressToStructs func-from=NewMapStringServiceAddressFromStructs
+	TaggedAddresses map[string]ServiceAddress `protobuf:"bytes,15,rep,name=TaggedAddresses,proto3" json:"TaggedAddresses" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Meta            map[string]string         `protobuf:"bytes,6,rep,name=Meta,proto3" json:"Meta,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Port            int                       `protobuf:"varint,7,opt,name=Port,proto3,casttype=int" json:"Port,omitempty"`
 	// mog: func-to=WeightsPtrToStructs func-from=NewWeightsPtrFromStructs
 	Weights           *Weights `protobuf:"bytes,8,opt,name=Weights,proto3" json:"Weights,omitempty"`
 	EnableTagOverride bool     `protobuf:"varint,9,opt,name=EnableTagOverride,proto3" json:"EnableTagOverride,omitempty"`
