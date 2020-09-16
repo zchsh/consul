@@ -177,9 +177,7 @@ func fieldName(field *ast.Field) (string, error) {
 	case *ast.Ident:
 		return n.Name, nil
 	case *ast.SelectorExpr:
-		if ident, ok := n.X.(*ast.Ident); ok {
-			return ident.Name, nil
-		}
+		return n.Sel.Name, nil
 	}
 
 	buf := new(bytes.Buffer)
