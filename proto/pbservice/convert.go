@@ -74,3 +74,21 @@ func NewMapStringServiceAddressFromStructs(t map[string]structs.ServiceAddress) 
 	}
 	return s
 }
+
+// TODO: handle this with mog
+func ExposePathSliceToStructs(s []ExposePath) []structs.ExposePath {
+	t := make([]structs.ExposePath, 0, len(s))
+	for i, v := range s {
+		t[i] = ExposePathToStructs(v)
+	}
+	return t
+}
+
+// TODO: handle this with mog
+func NewExposePathSliceFromStructs(t []structs.ExposePath) []ExposePath {
+	s := make([]ExposePath, 0, len(t))
+	for i, v := range t {
+		s[i] = NewExposePathFromStructs(v)
+	}
+	return s
+}
