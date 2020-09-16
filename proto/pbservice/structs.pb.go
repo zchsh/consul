@@ -37,7 +37,6 @@ const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 // target=github.com/hashicorp/consul/agent/structs.Node
 // output=structs.gen.go
 // name=Structs
-// ignore-fields=RaftIndex
 type Node struct {
 	ID              github_com_hashicorp_consul_types.NodeID `protobuf:"bytes,1,opt,name=ID,proto3,casttype=github.com/hashicorp/consul/types.NodeID" json:"ID,omitempty"`
 	Node            string                                   `protobuf:"bytes,2,opt,name=Node,proto3" json:"Node,omitempty"`
