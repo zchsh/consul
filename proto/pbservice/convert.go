@@ -121,3 +121,29 @@ func NewUpstreamsFromStructs(t structs.Upstreams) []Upstream {
 	}
 	return s
 }
+
+// TODO: handle this with mog
+func CheckTypesToStructs(s []*CheckType) structs.CheckTypes {
+	t := make(structs.CheckTypes, len(s))
+	for i, v := range s {
+		if v == nil {
+			continue
+		}
+		newV := CheckTypeToStructs(*v)
+		t[i] = &newV
+	}
+	return t
+}
+
+// TODO: handle this with mog
+func NewCheckTypesFromStructs(t structs.CheckTypes) []*CheckType {
+	s := make([]*CheckType, len(t))
+	for i, v := range t {
+		if v == nil {
+			continue
+		}
+		newV := NewCheckTypeFromStructs(*v)
+		s[i] = &newV
+	}
+	return s
+}

@@ -51,18 +51,26 @@ message Node {
 
 // ServiceDefinition is used to JSON decode the Service definitions. For
 // documentation on specific fields see NodeService which is better documented.
+//
+// mog annotation:
+//
+// target=github.com/hashicorp/consul/agent/structs.ServiceDefinition
+// output=structs.gen.go
+// name=Structs
 message ServiceDefinition {
-  string Kind = 1 [(gogoproto.casttype) =
-                       "github.com/hashicorp/consul/agent/structs.ServiceKind"];
+  string Kind = 1 [(gogoproto.casttype) = "github.com/hashicorp/consul/agent/structs.ServiceKind"];
   string ID = 2;
   string Name = 3;
   repeated string Tags = 4;
   string Address = 5;
-  map<string, ServiceAddress> TaggedAddresses = 16;
+  // mog: func-to=MapStringServiceAddressToStructs func-from=NewMapStringServiceAddressFromStructs
+  map<string, ServiceAddress> TaggedAddresses = 16 [(gogoproto.nullable) = false];
   map<string, string> Meta = 6;
   int32 Port = 7 [(gogoproto.casttype) = "int"];
   CheckType Check = 8 [(gogoproto.nullable) = false];
+  // mog: func-to=CheckTypesToStructs func-from=NewCheckTypesFromStructs
   repeated CheckType Checks = 9;
+  // mog: func-to=WeightsPtrToStructs func-from=NewWeightsPtrFromStructs
   Weights Weights = 10;
   string Token = 11;
   bool EnableTagOverride = 12;
@@ -79,7 +87,8 @@ message ServiceDefinition {
   // also called just "Config"
   ConnectProxyConfig Proxy = 14;
 
-  common.EnterpriseMeta EnterpriseMeta = 17;
+  // mog: func-to=EnterpriseMetaToStructs func-from=NewEnterpriseMetaFromStructs
+  common.EnterpriseMeta EnterpriseMeta = 17 [(gogoproto.nullable) = false];
 
   ServiceConnect Connect = 15;
 }
@@ -328,8 +337,14 @@ message Upstream {
   MeshGatewayConfig MeshGateway = 8  [(gogoproto.nullable) = false];
 }
 
+// TODO: move to connect.proto
 // ServiceConnect are the shared Connect settings between all service
 // definitions from the agent to the state store.
+// mog annotation:
+//
+// target=github.com/hashicorp/consul/agent/structs.ServiceConnect
+// output=connect.gen.go
+// name=Structs
 message ServiceConnect {
   // Native is true when this service can natively understand Connect.
   bool Native = 1;
@@ -341,7 +356,7 @@ message ServiceConnect {
   // boilerplate needed to register a sidecar service separately, but the end
   // result is identical to just making a second service registration via any
   // other means.
-  ServiceDefinition SidecarService = 3 [(gogoproto.moretags) = "bexpr:\"-\""];
+  ServiceDefinition SidecarService = 3;
 }
 
 // Weights represent the weight used by DNS for a given status
@@ -395,31 +410,29 @@ message ExposePath {
   bool ParsedFromCheck = 5;
 }
 
+// TODO: move to checks.proto
 // CheckType is used to create either the CheckMonitor or the CheckTTL.
 // The following types are supported: Script, HTTP, TCP, Docker, TTL, GRPC,
 // Alias. Script,
 // HTTP, Docker, TCP and GRPC all require Interval. Only one of the types may
 // to be provided: TTL or Script/Interval or HTTP/Interval or TCP/Interval or
 // Docker/Interval or GRPC/Interval or AliasService.
+//
+// mog annotation:
+//
+// target=github.com/hashicorp/consul/agent/structs.CheckType
+// output=checks.gen.go
+// name=Structs
 message CheckType {
-  // fields already embedded in CheckDefinition
-  // Note: CheckType.CheckID == CheckDefinition.ID
-
-  string CheckID = 1 [
-    (gogoproto.casttype) = "github.com/hashicorp/consul/types.CheckID",
-    (gogoproto.jsontag) = ""
-  ];
+  string CheckID = 1 [(gogoproto.casttype) = "github.com/hashicorp/consul/types.CheckID"];
   string Name = 2;
   string Status = 3;
   string Notes = 4;
 
-  // fields copied to CheckDefinition
-  // Update CheckDefinition when adding fields here
-
   repeated string ScriptArgs = 5;
   string HTTP = 6;
-  map<string, HeaderValue> Header = 20
-      [(gogoproto.nullable) = false];
+  // mog: func-to=MapHeadersToStructs func-from=NewMapHeadersFromStructs
+  map<string, HeaderValue> Header = 20 [(gogoproto.nullable) = false];
   string Method = 7;
   string Body = 26;
   string TCP = 8;
@@ -438,12 +451,14 @@ message CheckType {
   google.protobuf.Duration TTL = 18
       [(gogoproto.stdduration) = true, (gogoproto.nullable) = false];
 
+  // mog: func-to=int func-from=int32
   int32 SuccessBeforePassing = 21;
-	int32 FailuresBeforeCritical = 22;
+  // mog: func-to=int func-from=int32
+  int32 FailuresBeforeCritical = 22;
 
-	// Definition fields used when exposing checks through a proxy
-	string ProxyHTTP = 23;
-	string ProxyGRPC = 24;
+  // Definition fields used when exposing checks through a proxy
+  string ProxyHTTP = 23;
+  string ProxyGRPC = 24;
 
   // DeregisterCriticalServiceAfter, if >0, will cause the associated
   // service, if any, to be deregistered if this check is critical for
@@ -451,6 +466,7 @@ message CheckType {
   google.protobuf.Duration DeregisterCriticalServiceAfter = 19
       [(gogoproto.stdduration) = true, (gogoproto.nullable) = false];
 
+  // mog: func-to=int func-from=int32
   int32 OutputMaxSize = 25;
 }
 
