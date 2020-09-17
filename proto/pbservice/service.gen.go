@@ -78,6 +78,46 @@ func NewServiceConnectFromStructs(t structs.ServiceConnect) ServiceConnect {
 	s.SidecarService = NewServiceDefinitionPtrFromStructs(t.SidecarService)
 	return s
 }
+func ServiceDefinitionToStructs(s ServiceDefinition) structs.ServiceDefinition {
+	var t structs.ServiceDefinition
+	t.Kind = s.Kind
+	t.ID = s.ID
+	t.Name = s.Name
+	t.Tags = s.Tags
+	t.Address = s.Address
+	t.TaggedAddresses = MapStringServiceAddressToStructs(s.TaggedAddresses)
+	t.Meta = s.Meta
+	t.Port = s.Port
+	t.Check = CheckTypeToStructs(s.Check)
+	t.Checks = CheckTypesToStructs(s.Checks)
+	t.Weights = WeightsPtrToStructs(s.Weights)
+	t.Token = s.Token
+	t.EnableTagOverride = s.EnableTagOverride
+	t.Proxy = ConnectProxyConfigPtrToStructs(s.Proxy)
+	t.EnterpriseMeta = EnterpriseMetaToStructs(s.EnterpriseMeta)
+	t.Connect = ServiceConnectPtrToStructs(s.Connect)
+	return t
+}
+func NewServiceDefinitionFromStructs(t structs.ServiceDefinition) ServiceDefinition {
+	var s ServiceDefinition
+	s.Kind = t.Kind
+	s.ID = t.ID
+	s.Name = t.Name
+	s.Tags = t.Tags
+	s.Address = t.Address
+	s.TaggedAddresses = NewMapStringServiceAddressFromStructs(t.TaggedAddresses)
+	s.Meta = t.Meta
+	s.Port = t.Port
+	s.Check = NewCheckTypeFromStructs(t.Check)
+	s.Checks = NewCheckTypesFromStructs(t.Checks)
+	s.Weights = NewWeightsPtrFromStructs(t.Weights)
+	s.Token = t.Token
+	s.EnableTagOverride = t.EnableTagOverride
+	s.Proxy = NewConnectProxyConfigPtrFromStructs(t.Proxy)
+	s.EnterpriseMeta = NewEnterpriseMetaFromStructs(t.EnterpriseMeta)
+	s.Connect = NewServiceConnectPtrFromStructs(t.Connect)
+	return s
+}
 func UpstreamToStructs(s Upstream) structs.Upstream {
 	var t structs.Upstream
 	t.DestinationType = s.DestinationType
