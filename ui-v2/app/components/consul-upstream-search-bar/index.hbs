@@ -1,13 +1,13 @@
 <form class="filter-bar">
   <FreetextFilter
-    @onsearch={{action onsearch}}
-    @value={{search}}
+    @onsearch={{action this.onsearch}}
+    @value={{this.search}}
     @placeholder="Search"
   />
   <div class="filters">
     <PopoverSelect
       @position="left"
-      @onchange={{action onfilter.instance}}
+      @onchange={{action this.onfilter.instance}}
       @multiple={{true}}
     as |components|>
       <BlockSlot @name="selected">
@@ -17,8 +17,8 @@
       </BlockSlot>
       <BlockSlot @name="options">
 {{#let components.Optgroup components.Option as |Optgroup Option|}}
-        <Option @value="registered" @selected={{contains 'registered' filter.instances}}>Registered</Option>
-        <Option @value="not-registered" @selected={{contains 'not-registered' filter.instances}}>Not Registered</Option>
+        <Option @value="registered" @selected={{contains 'registered' this.filter.instances}}>Registered</Option>
+        <Option @value="not-registered" @selected={{contains 'not-registered' this.filter.instances}}>Not Registered</Option>
 {{/let}}
       </BlockSlot>
     </PopoverSelect>
@@ -28,7 +28,7 @@
       class="type-sort"
       data-test-sort-control
       @position="right"
-      @onchange={{action onsort}}
+      @onchange={{action this.onsort}}
       @multiple={{false}}
     as |components|>
       <BlockSlot @name="selected">
@@ -41,19 +41,19 @@
               ))
             as |selectable|
           }}
-            {{get selectable sort}}
+            {{get selectable this.sort}}
           {{/let}}
         </span>
       </BlockSlot>
       <BlockSlot @name="options">
 {{#let components.Optgroup components.Option as |Optgroup Option|}}
         <Optgroup @label="Health Status">
-          <Option @value="Status:asc" @selected={{eq "Status:asc" sort}}>Unhealthy to Healthy</Option>
-          <Option @value="Status:desc" @selected={{eq "Status:desc" sort}}>Healthy to Unhealthy</Option>
+          <Option @value="Status:asc" @selected={{eq "Status:asc" this.sort}}>Unhealthy to Healthy</Option>
+          <Option @value="Status:desc" @selected={{eq "Status:desc" this.sort}}>Healthy to Unhealthy</Option>
         </Optgroup>
         <Optgroup @label="Service Name">
-          <Option @value="Name:asc" @selected={{eq "Name:asc" sort}}>A to Z</Option>
-          <Option @value="Name:desc" @selected={{eq "Name:desc" sort}}>Z to A</Option>
+          <Option @value="Name:asc" @selected={{eq "Name:asc" this.sort}}>A to Z</Option>
+          <Option @value="Name:desc" @selected={{eq "Name:desc" this.sort}}>Z to A</Option>
         </Optgroup>
 {{/let}}
       </BlockSlot>

@@ -1,11 +1,11 @@
-{{#if (eq type 'delete')}}
-  {{#if (eq status 'success') }}
+{{#if (eq this.type 'delete')}}
+  {{#if (eq this.status 'success') }}
     The session was invalidated.
   {{else}}
     There was an error invalidating the session.
   {{/if}}
-{{else if (eq type 'update')}}
-  {{#if (eq status 'warning') }}
+{{else if (eq this.type 'update')}}
+  {{#if (eq this.status 'warning') }}
     This node no longer exists in the catalog.
   {{else}}
   {{/if}}

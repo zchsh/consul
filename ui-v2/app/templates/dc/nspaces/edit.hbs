@@ -1,4 +1,4 @@
-{{#if create }}
+{{#if this.create }}
   {{title 'New Namespace'}}
 {{else}}
   {{title 'Edit Namespace'}}
@@ -14,10 +14,10 @@
   </BlockSlot>
   <BlockSlot @name="header">
     <h1>
-{{#if create }}
+{{#if this.create }}
       New Namespace
 {{else}}
-      Edit {{item.Name}}
+      Edit {{this.item.Name}}
 {{/if}}
     </h1>
   </BlockSlot>

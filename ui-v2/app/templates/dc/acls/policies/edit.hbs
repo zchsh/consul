@@ -1,5 +1,5 @@
-{{#if isAuthorized }}
-  {{#if create }}
+{{#if this.isAuthorized }}
+  {{#if this.create }}
       {{title 'New Policy'}}
   {{else}}
       {{title 'Edit Policy'}}
@@ -8,8 +8,8 @@
   {{title 'Access Controls'}}
 {{/if}}
 <AppView
-  @authorized={{isAuthorized}}
-  @enabled={{isEnabled}}
+  @authorized={{this.isAuthorized}}
+  @enabled={{this.isEnabled}}
   >
     <BlockSlot @name="notification" as |status type item error|>
       {{partial 'dc/acls/policies/notifications'}}
@@ -27,11 +27,11 @@
     </BlockSlot>
     <BlockSlot @name="header">
         <h1>
-{{#if isAuthorized }}
-  {{#if create }}
+{{#if this.isAuthorized }}
+  {{#if this.create }}
           New Policy
   {{else}}
-    {{#if (eq (policy/typeof item) 'policy-management')}}
+    {{#if (eq (policy/typeof this.item) 'policy-management')}}
           View Policy
     {{else}}
           Edit Policy
@@ -43,7 +43,7 @@
         </h1>
     </BlockSlot>
     <BlockSlot @name="content">
-{{#if (eq (policy/typeof item) 'policy-management')}}
+{{#if (eq (policy/typeof this.item) 'policy-management')}}
       {{ partial 'dc/acls/policies/view'}}
 {{else}}
       {{ partial 'dc/acls/policies/form'}}

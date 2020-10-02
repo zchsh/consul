@@ -2,11 +2,11 @@
 <div class="definition-table">
   <dl>
     <dt>Name</dt>
-    <dd>{{item.Name}}</dd>
+    <dd>{{this.item.Name}}</dd>
     <dt>Valid Datacenters</dt>
-    <dd>{{ join ', ' (policy/datacenters item)}}</dd>
+    <dd>{{ join ', ' (policy/datacenters this.item)}}</dd>
     <dt>Description</dt>
-    <dd>{{item.Description}}</dd>
+    <dd>{{this.item.Description}}</dd>
   </dl>
 </div>
-<TokenList @caption="Applied to the following tokens:" @items={{items}} />
+<TokenList @caption="Applied to the following tokens:" @items={{this.items}} />

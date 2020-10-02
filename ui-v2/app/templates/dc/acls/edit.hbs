@@ -9,22 +9,22 @@
     </BlockSlot>
     <BlockSlot @name="header">
         <h1>
-{{#if item.Name }}
-            {{item.Name}}
+{{#if this.item.Name }}
+            {{this.item.Name}}
 {{else}}
             New token
 {{/if}}
         </h1>
     </BlockSlot>
     <BlockSlot @name="actions">
-{{#if (not create) }}
-        <CopyButton @value={{item.ID}} @name="token ID">
+{{#if (not this.create) }}
+        <CopyButton @value={{this.item.ID}} @name="token ID">
             Copy token ID
         </CopyButton>
-        <button type="button" {{ action "clone" item }}>Clone token</button>
+        <button type="button" {{ action "clone" this.item }}>Clone token</button>
         <ConfirmationDialog @message="Are you sure you want to use this ACL token?">
             <BlockSlot @name="action" as |confirm|>
-                <button data-test-use type="button" {{ action confirm 'use' item }}>Use token</button>
+                <button data-test-use type="button" {{ action confirm 'use' this.item }}>Use token</button>
             </BlockSlot>
             <BlockSlot @name="dialog" as |execute cancel message|>
                 <p>

@@ -3,63 +3,63 @@
   {{#yield-slot name='template'}}
   {{else}}
     <header>
-      Policy{{if allowIdentity ' or identity?' ''}}
+      Policy{{if this.allowIdentity ' or identity?' ''}}
     </header>
-  {{#if allowIdentity}}
+  {{#if this.allowIdentity}}
     <p>
       Identities are default policies with configurable names. They save you some time and effort you're using Consul for Connect features.
     </p>
     {{! this should use radio-group }}
-    <div role="radiogroup" class={{if item.error.Type ' has-error'}}>
-        {{#each templates as |template|}}
+    <div role="radiogroup" class={{if this.item.error.Type ' has-error'}}>
+        {{#each this.templates as |template|}}
             <label data-test-radiobutton={{concat 'template_' template.template}}>
               <span>{{template.name}}</span>
-              <input type="radio" name={{concat name '[template]'}} value={{template.template}} checked={{eq item.template template.template}} onchange={{action (changeset-set item 'template') value='target.value'}}/>
+              <input type="radio" name={{concat this.name '[template]'}} value={{template.template}} checked={{eq this.item.template template.template}} onchange={{action (changeset-set this.item 'template') value='target.value'}} />
             </label>
         {{/each}}
     </div>
   {{else}}
-    <input type="hidden" name={{concat name '[template]'}} value="" />
+    <input type="hidden" name={{concat this.name '[template]'}} value="" />
   {{/if}}
   {{/yield-slot}}
-    <label class="type-text{{if (and item.error.Name (not item.isPristine)) ' has-error'}}">
+    <label class="type-text{{if (and this.item.error.Name (not this.item.isPristine)) ' has-error'}}">
         <span>Name</span>
-        <input type="text" value={{item.Name}} name="{{name}}[Name]" autofocus="autofocus" oninput={{action 'change'}} />
+        <input type="text" value={{this.item.Name}} name="{{this.name}}[Name]" autofocus="autofocus" oninput={{action 'change'}} />
         <em>
           Maximum 128 characters. May only include letters (uppercase and/or lowercase) and/or numbers. Must be unique.
         </em>
-        {{#if (and item.error.Name (not item.isPristine))}}
-          <strong>{{item.error.Name.validation}}</strong>
+        {{#if (and this.item.error.Name (not this.item.isPristine))}}
+          <strong>{{this.item.error.Name.validation}}</strong>
         {{/if}}
     </label>
     <label class="type-text" data-test-rules>
         <span>Rules <a href="{{env 'CONSUL_DOCS_URL'}}/guides/acl.html#rule-specification" rel="help noopener noreferrer" target="_blank">(HCL Format)</a></span>
-{{#if (eq item.template 'service-identity')}}
-        <CodeEditor @readonly={{true}} @name={{concat name "[Rules]"}} @syntax="hcl" @oninput={{action "change" (concat name "[Rules]")}}>
-          {{~component 'service-identity' nspace=nspace name=item.Name~}}
+{{#if (eq this.item.template 'service-identity')}}
+        <CodeEditor @readonly={{true}} @name={{concat this.name "[Rules]"}} @syntax="hcl" @oninput={{action "change" (concat this.name "[Rules]")}}>
+          {{~component 'service-identity' nspace=this.nspace name=this.item.Name~}}
         </CodeEditor>
-{{else if (eq item.template 'node-identity')}}
-        <CodeEditor @readonly={{true}} @name={{concat name "[Rules]"}} @syntax="hcl" @oninput={{action "change" (concat name "[Rules]")}}>
-          {{~component 'node-identity' name=item.Name~}}
+{{else if (eq this.item.template 'node-identity')}}
+        <CodeEditor @readonly={{true}} @name={{concat this.name "[Rules]"}} @syntax="hcl" @oninput={{action "change" (concat this.name "[Rules]")}}>
+          {{~component 'node-identity' name=this.item.Name~}}
         </CodeEditor>
 {{else}}
-        <CodeEditor @syntax="hcl" @class={{if item.error.Rules "error"}} @name={{concat name "[Rules]"}} @value={{item.Rules}} @onkeyup={{action "change" (concat name "[Rules]")}} />
-        {{#if item.error.Rules}}
-          <strong>{{item.error.Rules.validation}}</strong>
+        <CodeEditor @syntax="hcl" @class={{if this.item.error.Rules "error"}} @name={{concat this.name "[Rules]"}} @value={{this.item.Rules}} @onkeyup={{action "change" (concat this.name "[Rules]")}} />
+        {{#if this.item.error.Rules}}
+          <strong>{{this.item.error.Rules.validation}}</strong>
         {{/if}}
 {{/if}}
     </label>
-{{#if (eq item.template 'node-identity')}}
+{{#if (eq this.item.template 'node-identity')}}
 
     <DataSource @src="/*/*/datacenters"
-      @onchange={{action (mut datacenters) value="data"}}
+      @onchange={{action (mut this.datacenters) value="data"}}
     />
     <label class="type-select" data-test-datacenter>
       <span>Datacenter</span>
       <PowerSelect
-          @options={{map-by 'Name' datacenters}}
+          @options={{map-by 'Name' this.datacenters}}
           @searchField="Name"
-          @selected={{or item.Datacenter dc}}
+          @selected={{or this.item.Datacenter this.dc}}
           @searchPlaceholder="Type a datacenter name"
           @onChange={{action "change" "Datacenter"}} as |Name|>
             {{Name}}
@@ -69,26 +69,26 @@
     <div class="type-toggle">
       <span>Valid datacenters</span>
       <label>
-        <input type="checkbox" name="{{name}}[isScoped]" checked={{if (not isScoped) 'checked' }} onchange={{action 'change'}} />
+        <input type="checkbox" name="{{this.name}}[isScoped]" checked={{if (not this.isScoped) 'checked' }} onchange={{action 'change'}} />
         <span>All</span>
       </label>
     </div>
-  {{#if isScoped }}
+  {{#if this.isScoped }}
     <DataSource @src="/*/*/datacenters"
-      @onchange={{action (mut datacenters) value="data"}}
+      @onchange={{action (mut this.datacenters) value="data"}}
     />
 
     <div class="checkbox-group" role="group">
-      {{#each datacenters as |dc| }}
+      {{#each this.datacenters as |dc| }}
         <label class="type-checkbox">
-          <input type="checkbox" name="{{name}}[Datacenters]" value={{dc.Name}} checked={{if (contains dc.Name item.Datacenters) 'checked' }} onchange={{action 'change'}} />
+          <input type="checkbox" name="{{this.name}}[Datacenters]" value={{dc.Name}} checked={{if (contains dc.Name this.item.Datacenters) 'checked' }} onchange={{action 'change'}} />
           <span>{{dc.Name}}</span>
         </label>
       {{/each}}
-      {{#each item.Datacenters as |dc| }}
-{{#if (not (find-by 'Name' dc datacenters))}}
+      {{#each this.item.Datacenters as |dc| }}
+{{#if (not (find-by 'Name' dc this.datacenters))}}
         <label class="type-checkbox">
-          <input type="checkbox" name="{{name}}[Datacenters]" value={{dc}} checked="checked" onchange={{action 'change'}} />
+          <input type="checkbox" name="{{this.name}}[Datacenters]" value={{dc}} checked="checked" onchange={{action 'change'}} />
           <span>{{dc}}</span>
         </label>
 {{/if}}
@@ -98,10 +98,10 @@
 
   {{/if}}
 {{/if}}
-{{#if (eq item.template '') }}
+{{#if (eq this.item.template '') }}
   <label class="type-text">
     <span>Description (Optional)</span>
-    <textarea name="{{name}}[Description]" value={{item.Description}} oninput={{action 'change'}}></textarea>
+    <textarea name="{{this.name}}[Description]" value={{this.item.Description}} oninput={{action 'change'}}></textarea>
   </label>
 {{/if}}
 </fieldset>

@@ -1,5 +1,5 @@
-{{#if (gt items.length 0)}}
-<ListCollection @items={{items}} class="consul-policy-list" as |item|>
+{{#if (gt this.items.length 0)}}
+<ListCollection @items={{this.items}} class="consul-policy-list" as |item|>
     <BlockSlot @name="header">
 {{#if (eq (policy/typeof item) 'policy-management')}}
         <dl class="policy-management">
@@ -40,7 +40,7 @@
           </BlockSlot>
         </Action>
 {{#if (not-eq (policy/typeof item) 'policy-management')}}
-        <Action data-test-delete-action @onclick={{action ondelete item}} class="dangerous">
+        <Action data-test-delete-action @onclick={{action this.ondelete item}} class="dangerous">
           <BlockSlot @name="label">
             Delete
           </BlockSlot>

@@ -1,6 +1,6 @@
-{{#let components.MenuItem as |MenuItem|}}
+{{#let this.components.MenuItem as |MenuItem|}}
   <MenuItem
-    class={{if selected 'is-active'}}
+    class={{if this.selected 'is-active'}}
     ...attributes
     @onclick={{action 'click'}}
     @selected={{selected}}

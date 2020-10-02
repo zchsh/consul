@@ -1,11 +1,11 @@
-{{#if (not-eq error.status "403")}}
-  <EmptyState class={{concat "status-" error.status}}>
+{{#if (not-eq this.error.status "403")}}
+  <EmptyState class={{concat "status-" this.error.status}}>
     <BlockSlot @name="header">
-      <h2>{{or error.message "Consul returned an error"}}</h2>
+      <h2>{{or this.error.message "Consul returned an error"}}</h2>
     </BlockSlot>
-{{#if error.status }}
+{{#if this.error.status }}
     <BlockSlot @name="subheader">
-      <h3 data-test-status={{error.status}}>Error {{error.status}}</h3>
+      <h3 data-test-status={{this.error.status}}>Error {{this.error.status}}</h3>
     </BlockSlot>
 {{/if}}
     <BlockSlot @name="body">
@@ -25,7 +25,7 @@
 {{else}}
   <EmptyState class="status-403">
     <BlockSlot @name="header">
-      <h2 data-test-status={{error.status}}>You are not authorized</h2>
+      <h2 data-test-status={{this.error.status}}>You are not authorized</h2>
     </BlockSlot>
     <BlockSlot @name="subheader">
       <h3>Error 403</h3>

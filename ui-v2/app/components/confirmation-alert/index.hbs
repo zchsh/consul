@@ -9,14 +9,14 @@
   <ul>
     <YieldSlot @name="confirm" @params={{
         block-params (component 'confirmation-alert/action'
-          onclick=(action onclick)
+          onclick=(action this.onclick)
         )
       }}
     >
       {{yield}}
     </YieldSlot>
     <li>
-      <label for={{name}}>Cancel</label>
+      <label for={{this.name}}>Cancel</label>
     </li>
   </ul>
 </div>

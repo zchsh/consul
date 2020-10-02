@@ -1,4 +1,4 @@
-<StateChart @src={{chart}} as |State Guard Action dispatch state|>
+<StateChart @src={{this.chart}} as |State Guard Action dispatch state|>
 
   <Guard @name="hasToken" @cond={{action 'hasToken'}} />
   <Action @name="login" @exec={{action 'login'}} />
@@ -7,7 +7,7 @@
   {{! token, whether thats a new token, a changed token or a deleted token }}
   <DataSource
     @src="settings://consul:token"
-    @onchange={{queue (action (mut token) value="data") (action dispatch "CHANGE") (action (mut previousToken) value="data")}}
+    @onchange={{queue (action (mut this.token) value="data") (action dispatch "CHANGE") (action (mut this.previousToken) value="data")}}
   />
   {{! This DataSink is just used for logging in from the form, }}
   {{! or logging out via the exposed logout function }}
@@ -19,10 +19,10 @@
     {{#let (hash
       login=(action sink.open)
       logout=(action sink.open null)
-      token=token
+      token=this.token
     ) (hash
-      AuthProfile=(component 'auth-profile' item=token)
-      AuthForm=(component 'auth-form' dc=dc nspace=nspace onsubmit=(action sink.open value="data"))
+      AuthProfile=(component 'auth-profile' item=this.token)
+      AuthForm=(component 'auth-form' dc=this.dc nspace=this.nspace onsubmit=(action sink.open value="data"))
     ) as |api components|}}
       <State @matches="authorized">
         {{#yield-slot name="authorized"}}

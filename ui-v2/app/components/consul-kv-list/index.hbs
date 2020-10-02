@@ -1,18 +1,18 @@
   <DataWriter
-    @sink={{concat '/' dc '/' nspace '/kv/'}}
+    @sink={{concat '/' this.dc '/' this.nspace '/kv/'}}
     @type="kv"
     @label="key"
-    @ondelete={{action ondelete}}
+    @ondelete={{action this.ondelete}}
     as |writer|>
     <BlockSlot @name="content">
-{{#if (gt items.length 0)}}
-      <TabularCollection class="consul-kv-list" @items={{items}} as |item index|>
+{{#if (gt this.items.length 0)}}
+      <TabularCollection class="consul-kv-list" @items={{this.items}} as |item index|>
         <BlockSlot @name="header">
           <th>Name</th>
         </BlockSlot>
         <BlockSlot @name="row">
           <td data-test-kv={{item.Key}} class={{if item.isFolder 'folder' 'file' }}>
-              <a href={{href-to (if item.isFolder 'dc.kv.folder' 'dc.kv.edit') item.Key}}>{{right-trim (left-trim item.Key parent.Key) '/'}}</a>
+              <a href={{href-to (if item.isFolder 'dc.kv.folder' 'dc.kv.edit') item.Key}}>{{right-trim (left-trim item.Key this.parent.Key) '/'}}</a>
           </td>
         </BlockSlot>
         <BlockSlot @name="actions" as |index change checked|>

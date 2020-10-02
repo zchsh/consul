@@ -3,11 +3,10 @@
   class="consul-intention-permission-header-form"
 >
   {{yield (hash
-    submit=(action 'submit' changeset)
-    reset=(action 'reset' changeset)
-
-    isDirty=(and changeset.isValid changeset.isDirty)
-    changeset=changeset
+    submit=(action 'submit' this.changeset)
+    reset=(action 'reset' this.changeset)
+    isDirty=(and this.changeset.isValid this.changeset.isDirty)
+    changeset=this.changeset
   )}}
 
   <fieldset>
@@ -17,37 +16,37 @@
         <span>Header Type</span>
         <div>
           <PowerSelect
-            @options={{headerTypes}}
-            @selected={{headerType}}
-            @onChange={{action 'change' 'HeaderType' changeset}} as |Type|>
-              {{get headerLabels Type}}
+            @options={{this.headerTypes}}
+            @selected={{this.headerType}}
+            @onChange={{action 'change' 'HeaderType' this.changeset}} as |Type|>
+              {{get this.headerLabels Type}}
           </PowerSelect>
         </div>
       </label>
-      <label class="type-text{{if changeset.error.Name ' has-error'}}">
+      <label class="type-text{{if this.changeset.error.Name ' has-error'}}">
         <span>Header name</span>
         <input
           type="text"
-          name={{concat name '[Name]'}}
-          value={{changeset-get changeset 'Name'}}
-          oninput={{action 'change' 'Name' changeset}}
+          name={{concat this.name '[Name]'}}
+          value={{changeset-get this.changeset 'Name'}}
+          oninput={{action 'change' 'Name' this.changeset}}
         />
-        {{#if changeset.error.Name}}
-          <strong>{{changeset.error.Name.validation}}</strong>
+        {{#if this.changeset.error.Name}}
+          <strong>{{this.changeset.error.Name.validation}}</strong>
         {{/if}}
       </label>
 
-  {{#if shouldShowValueField}}
-      <label class="type-text{{if changeset.error.Value ' has-error'}}">
-        <span>Header {{lowercase (get headerLabels headerType)}}</span>
+  {{#if this.shouldShowValueField}}
+      <label class="type-text{{if this.changeset.error.Value ' has-error'}}">
+        <span>Header {{lowercase (get this.headerLabels this.headerType)}}</span>
         <input
           type="text"
           name="Value"
-          value={{changeset-get changeset 'Value'}}
-          oninput={{action 'change' 'Value' changeset}}
+          value={{changeset-get this.changeset 'Value'}}
+          oninput={{action 'change' 'Value' this.changeset}}
         />
-        {{#if changeset.error.Value}}
-          <strong>{{changeset.error.Value.validation}}</strong>
+        {{#if this.changeset.error.Value}}
+          <strong>{{this.changeset.error.Value.validation}}</strong>
         {{/if}}
       </label>
   {{/if}}

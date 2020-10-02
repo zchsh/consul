@@ -1,13 +1,13 @@
-<DataLoader @src={{uri nspace dc 'intentions' 'for-service' slug}} as |api|>
+<DataLoader @src={{uri this.nspace this.dc 'intentions' 'for-service' this.slug}} as |api|>
   <BlockSlot @name="error">
     <ErrorState @error={{api.error}} />
   </BlockSlot>
   <BlockSlot @name="loaded">
 {{#let api.data as |items|}}
   {{#let (hash
-    accesses=(if access (split access ',') undefined)
+    accesses=(if this.access (split this.access ',') undefined)
   ) as |filters|}}
-    {{#let (or sortBy "Action:asc") as |sort|}}
+    {{#let (or this.sortBy "Action:asc") as |sort|}}
         <div id="intentions" class="tab-section">
           <div role="tabpanel">
             <Portal @target="app-view-actions">
@@ -15,21 +15,19 @@
             </Portal>
 {{#if (gt items.length 0) }}
             <ConsulIntentionSearchBar
-              @search={{search}}
-              @onsearch={{action (mut search) value="target.value"}}
-
+              @search={{this.search}}
+              @onsearch={{action (mut this.search) value="target.value"}}
               @sort={{sort}}
-              @onsort={{action (mut sortBy) value="target.selected"}}
-
+              @onsort={{action (mut this.sortBy) value="target.selected"}}
               @filter={{filters}}
               @onfilter={{hash
-                access=(action (mut access) value="target.selectedItems")
+                access=(action (mut this.access) value="target.selectedItems")
               }}
               />
 {{/if}}
 {{#let (filter (filter-predicate 'intention' filters) items) as |filtered|}}
   {{#let (sort-by (comparator 'intention' sort) filtered) as |sorted|}}
-            <ChangeableSet @dispatcher={{searchable 'intention' sorted}} @terms={{search}}>
+            <ChangeableSet @dispatcher={{searchable 'intention' sorted}} @terms={{this.search}}>
               <BlockSlot @name="content" as |searched|>
                 <ConsulIntentionList
                   @items={{searched}}

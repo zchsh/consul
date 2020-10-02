@@ -1,5 +1,5 @@
-{{#if isAuthorized }}
-  {{#if item.ID}}
+{{#if this.isAuthorized }}
+  {{#if this.item.ID}}
     {{title 'Edit Role'}}
   {{else}}
     {{title 'New Role'}}
@@ -8,8 +8,8 @@
   {{title 'Access Controls'}}
 {{/if}}
 <AppView
-  @authorized={{isAuthorized}}
-  @enabled={{isEnabled}}
+  @authorized={{this.isAuthorized}}
+  @enabled={{this.isEnabled}}
   >
     <BlockSlot @name="notification" as |status type item error|>
       {{partial 'dc/acls/roles/notifications'}}
@@ -27,8 +27,8 @@
     </BlockSlot>
     <BlockSlot @name="header">
         <h1>
-{{#if isAuthorized }}
-  {{#if create }}
+{{#if this.isAuthorized }}
+  {{#if this.create }}
             New Role
   {{else}}
             Edit Role

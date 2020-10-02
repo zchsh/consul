@@ -1,13 +1,13 @@
 <form class="filter-bar">
   <FreetextFilter
-    @onsearch={{action onsearch}}
-    @value={{search}}
+    @onsearch={{action this.onsearch}}
+    @value={{this.search}}
     @placeholder="Search"
   />
   <div class="filters">
     <PopoverSelect
       @position="left"
-      @onchange={{action onfilter.type}}
+      @onchange={{action this.onfilter.type}}
       @multiple={{true}}
     as |components|>
       <BlockSlot @name="selected">
@@ -17,9 +17,9 @@
       </BlockSlot>
       <BlockSlot @name="options">
 {{#let components.Optgroup components.Option as |Optgroup Option|}}
-        <Option @value="global-management" @selected={{contains 'global-management' filter.types}}>Global Management</Option>
-        <Option @value="global" @selected={{contains 'global' filter.types}}>Global</Option>
-        <Option @value="local" @selected={{contains 'local' filter.types}}>Local</Option>
+        <Option @value="global-management" @selected={{contains 'global-management' this.filter.types}}>Global Management</Option>
+        <Option @value="global" @selected={{contains 'global' this.filter.types}}>Global</Option>
+        <Option @value="local" @selected={{contains 'local' this.filter.types}}>Local</Option>
 {{/let}}
       </BlockSlot>
     </PopoverSelect>
@@ -29,7 +29,7 @@
       class="type-sort"
       data-test-sort-control
       @position="right"
-      @onchange={{action onsort}}
+      @onchange={{action this.onsort}}
       @multiple={{false}}
     as |components|>
       <BlockSlot @name="selected">
@@ -40,15 +40,15 @@
               ))
             as |selectable|
           }}
-            {{get selectable sort}}
+            {{get selectable this.sort}}
           {{/let}}
         </span>
       </BlockSlot>
       <BlockSlot @name="options">
 {{#let components.Optgroup components.Option as |Optgroup Option|}}
         <Optgroup @label="Creation">
-          <Option @value="CreateTime:desc" @selected={{eq "CreateTime:desc" sort}}>Newest to oldest</Option>
-          <Option @value="CreateTime:asc" @selected={{eq "CreateTime:asc" sort}}>Oldest to newest</Option>
+          <Option @value="CreateTime:desc" @selected={{eq "CreateTime:desc" this.sort}}>Newest to oldest</Option>
+          <Option @value="CreateTime:asc" @selected={{eq "CreateTime:asc" this.sort}}>Oldest to newest</Option>
         </Optgroup>
 {{/let}}
       </BlockSlot>

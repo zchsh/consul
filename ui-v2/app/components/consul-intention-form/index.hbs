@@ -1,12 +1,12 @@
 <DataForm
-  @dc={{dc}}
-  @nspace={{nspace}}
+  @dc={{this.dc}}
+  @nspace={{this.nspace}}
   @type="intention"
-  @autofill={{autofill}}
-  @item={{item}}
-  @src={{src}}
+  @autofill={{this.autofill}}
+  @item={{this.item}}
+  @src={{this.src}}
   @onchange={{action "change"}}
-  @onsubmit={{action onsubmit}}
+  @onsubmit={{action this.onsubmit}}
   as |api|
 >
     <BlockSlot @name="error" as |Notification|>
@@ -30,7 +30,7 @@
 {{#let api.data as |item|}}
   {{#if item.IsEditable}}
       <DataSource
-        @src={{concat '/' nspace '/' dc '/services'}}
+        @src={{concat '/' this.nspace '/' this.dc '/services'}}
         @onchange={{action "createServices" item}}
       />
 
@@ -42,12 +42,12 @@
       {{/if}}
       <form onsubmit={{action api.submit}}>
         <ConsulIntentionForm::Fieldsets
-          @nspaces={{nspaces}}
-          @services={{services}}
-          @SourceName={{SourceName}}
-          @SourceNS={{SourceNS}}
-          @DestinationName={{DestinationName}}
-          @DestinationNS={{DestinationNS}}
+          @nspaces={{this.nspaces}}
+          @services={{this.services}}
+          @SourceName={{this.SourceName}}
+          @SourceNS={{this.SourceNS}}
+          @DestinationName={{this.DestinationName}}
+          @DestinationNS={{this.DestinationNS}}
           @item={{item}}
           @disabled={{api.disabled}}
           @create={{api.isCreate}}
@@ -55,7 +55,7 @@
         />
         <div>
           <button type="submit" disabled={{or item.isInvalid api.disabled}}>Save</button>
-          <button type="reset" onclick={{action oncancel item}} disabled={{api.disabled}}>Cancel</button>
+          <button type="reset" onclick={{action this.oncancel item}} disabled={{api.disabled}}>Cancel</button>
 {{#if (not api.isCreate)}}
   {{#if (not-eq item.ID 'anonymous') }}
           <ConfirmationDialog @message="Are you sure you want to delete this Intention?">

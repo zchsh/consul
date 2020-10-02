@@ -1,18 +1,18 @@
 <nav
-  style={{if selectedWidth (concat '--selected-width:' selectedWidth ';--selected-left:' selectedLeft ';--selected-height:' selectedHeight ';--selected-top:' selectedTop) undefined}}
+  style={{if this.selectedWidth (concat '--selected-width:' this.selectedWidth ';--selected-left:' this.selectedLeft ';--selected-height:' this.selectedHeight ';--selected-top:' this.selectedTop) undefined}}
   role="tablist"
-  class={{concat 'tab-nav' (if isAnimatable ' animatable' '')}}
-  id={{guid}}>
+  class={{concat 'tab-nav' (if this.isAnimatable ' animatable' '')}}
+  id={{this.guid}}>
   <ul>
-{{#each items as |item|}}
+{{#each this.items as |item|}}
 <li
-  data-test-tab={{concat name '_' (if item.label (slugify item.label) (slugify item))}}
-  class={{if (or item.selected (eq selected (if item.label (slugify item.label) (slugify item)))) 'selected'}}
+  data-test-tab={{concat this.name '_' (if item.label (slugify item.label) (slugify item))}}
+  class={{if (or item.selected (eq this.selected (if item.label (slugify item.label) (slugify item)))) 'selected'}}
   >
 {{#if item.href }}
         <a href={{item.href}}>{{item.label}}</a>
 {{else}}
-      <label role="tab" onkeydown={{action 'keydown'}} tabindex="0" aria-controls="radiogroup_{{name}}_{{if item.label (slugify item.label) (slugify item)}}_panel" for="radiogroup_{{name}}_{{if item.label (slugify item.label) (slugify item)}}" data-test-radiobutton="{{name}}_{{if item.label (slugify item.label) (slugify item)}}">
+      <label role="tab" onkeydown={{action 'keydown'}} tabindex="0" aria-controls="radiogroup_{{this.name}}_{{if item.label (slugify item.label) (slugify item)}}_panel" for="radiogroup_{{this.name}}_{{if item.label (slugify item.label) (slugify item)}}" data-test-radiobutton="{{this.name}}_{{if item.label (slugify item.label) (slugify item)}}">
         <a>{{item}}</a>
       </label>
 {{/if}}

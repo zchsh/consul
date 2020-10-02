@@ -1,4 +1,4 @@
-{{#if item.ID}}
+{{#if this.item.ID}}
     {{title 'Edit Intention'}}
 {{else}}
     {{title 'New Intention'}}
@@ -11,8 +11,8 @@
     </BlockSlot>
     <BlockSlot @name="header">
         <h1>
-{{#if item.IsEditable}}
-  {{#if item.ID}}
+{{#if this.item.IsEditable}}
+  {{#if this.item.ID}}
           Edit Intention
   {{else}}
           New Intention
@@ -24,10 +24,10 @@
     </BlockSlot>
     <BlockSlot @name="content">
       <ConsulIntentionForm
-        @item={{item}}
-        @dc={{dc}}
-        @nspace={{nspace}}
-        @onsubmit={{transition-to 'dc.intentions.index' dc}}
+        @item={{this.item}}
+        @dc={{this.dc}}
+        @nspace={{this.nspace}}
+        @onsubmit={{transition-to 'dc.intentions.index' this.dc}}
       />
     </BlockSlot>
 </AppView>

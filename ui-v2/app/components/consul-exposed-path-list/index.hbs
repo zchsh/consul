@@ -1,8 +1,8 @@
 <ul data-test-proxy-exposed-paths>
-{{#each items as |path|}}
+{{#each this.items as |path|}}
   <li>
     <div class="header">
-    {{#let (concat address ':' path.Path) as |combinedAddress|}}
+    {{#let (concat this.address ':' path.Path) as |combinedAddress|}}
       <p class="combined-address">
         <span>
           {{combinedAddress}}

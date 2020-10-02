@@ -1,30 +1,28 @@
 <div id="instances" class="tab-section">
   <div role="tabpanel">
 {{#let (hash
-  statuses=(if status (split status ',') undefined)
-  sources=(if source (split source ',') undefined)
+  statuses=(if this.status (split this.status ',') undefined)
+  sources=(if this.source (split this.source ',') undefined)
 ) as |filters|}}
-  {{#let (or sortBy "Name:asc") as |sort|}}
-    {{#if (gt items.length 0) }}
+  {{#let (or this.sortBy "Name:asc") as |sort|}}
+    {{#if (gt this.items.length 0) }}
     <input type="checkbox" id="toolbar-toggle" />
     <ConsulServiceInstanceSearchBar
-      @sources={{externalSources}}
-      @search={{search}}
-      @onsearch={{action (mut search) value="target.value"}}
-
+      @sources={{this.externalSources}}
+      @search={{this.search}}
+      @onsearch={{action (mut this.search) value="target.value"}}
       @sort={{sort}}
-      @onsort={{action (mut sortBy) value="target.selected"}}
-
+      @onsort={{action (mut this.sortBy) value="target.selected"}}
       @filter={{filters}}
       @onfilter={{hash
-        status=(action (mut status) value="target.selectedItems")
-        source=(action (mut source) value="target.selectedItems")
+        status=(action (mut this.status) value="target.selectedItems")
+        source=(action (mut this.source) value="target.selectedItems")
       }}
       />
     {{/if}}
-{{#let (filter (filter-predicate 'serviceInstance' filters) items) as |filtered|}}
+{{#let (filter (filter-predicate 'serviceInstance' filters) this.items) as |filtered|}}
   {{#let (sort-by (comparator 'serviceInstance' sort) filtered) as |sorted|}}
-    <ChangeableSet @dispatcher={{searchable 'serviceInstance' sorted}} @terms={{search}}>
+    <ChangeableSet @dispatcher={{searchable 'serviceInstance' sorted}} @terms={{this.search}}>
       <BlockSlot @name="set" as |searched|>
         <ConsulServiceInstanceList @routeName="dc.services.instance" @items={{searched}}/>
       </BlockSlot>

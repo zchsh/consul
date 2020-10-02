@@ -1,15 +1,16 @@
-<StateChart @src={{chart}} as |State Guard Action dispatch state|>
+<StateChart @src={{this.chart}} as |State Guard Action dispatch state|>
   <Ref @target={{this}} @name="dispatch" @value={{dispatch}} />
   <State @matches="loaded">
     <div class="oidc-select" ...attributes>
-        {{#if (lt items.length 3)}}
+        {{#if (lt this.items.length 3)}}
             <ul>
-            {{#each items as |item|}}
+            {{#each this.items as |item|}}
               <li>
                 <button
-                  disabled={{disabled}}
-                  type="button" class={{concat item.Kind '-oidc-provider'}}
-                  onclick={{action onchange item}}
+                  disabled={{this.disabled}}
+                  type="button"
+                  class={{concat item.Kind '-oidc-provider'}}
+                  onclick={{action this.onchange item}}
                 >
                   Continue with {{or item.DisplayName item.Name}}{{#if (not-eq item.Namespace 'default')}} ({{item.Namespace}}){{/if}}
                 </button>
@@ -17,24 +18,24 @@
             {{/each}}
             </ul>
         {{else}}
-          {{#let (or provider (object-at 0 items)) as |item|}}
+          {{#let (or this.provider (object-at 0 this.items)) as |item|}}
             <label>
               <span>SSO Provider</span>
               <PowerSelect
-                @disabled={{disabled}}
-                @onChange={{action (mut provider)}}
+                @disabled={{this.disabled}}
+                @onChange={{action (mut this.provider)}}
                 @selected={{item}}
                 @searchEnabled={{false}}
-                @options={{items}} as |item|>
+                @options={{this.items}} as |item|>
                 <span class={{concat item.Kind '-oidc-provider'}}>
                   {{or item.DisplayName item.Name}}{{#if (not-eq item.Namespace 'default')}} ({{item.Namespace}}){{/if}}
                 </span>
               </PowerSelect>
             </label>
             <button
-              disabled={{disabled}}
+              disabled={{this.disabled}}
               type="button"
-              onclick={{action onchange item}}
+              onclick={{action this.onchange item}}
             >
               Log in
             </button>

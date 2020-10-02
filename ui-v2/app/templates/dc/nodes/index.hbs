@@ -1,38 +1,36 @@
 {{title 'Nodes'}}
-<EventSource @src={{items}} />
+<EventSource @src={{this.items}} />
 {{#let (hash
-  statuses=(if status (split status ',') undefined)
+  statuses=(if this.status (split this.status ',') undefined)
 ) as |filters|}}
-{{#let (or sortBy "Node:asc") as |sort|}}
+{{#let (or this.sortBy "Node:asc") as |sort|}}
   <AppView>
     <BlockSlot @name="header">
       <h1>
-        Nodes <em>{{format-number items.length}} total</em>
+        Nodes <em>{{format-number this.items.length}} total</em>
       </h1>
       <label for="toolbar-toggle"></label>
     </BlockSlot>
     <BlockSlot @name="toolbar">
-    {{#if (gt items.length 0) }}
+    {{#if (gt this.items.length 0) }}
         <ConsulNodeSearchBar
-          @search={{search}}
-          @onsearch={{action (mut search) value="target.value"}}
-
+          @search={{this.search}}
+          @onsearch={{action (mut this.search) value="target.value"}}
           @sort={{sort}}
-          @onsort={{action (mut sortBy) value="target.selected"}}
-
+          @onsort={{action (mut this.sortBy) value="target.selected"}}
           @filter={{filters}}
           @onfilter={{hash
-            status=(action (mut status) value="target.selectedItems")
+            status=(action (mut this.status) value="target.selectedItems")
           }}
         />
     {{/if}}
     </BlockSlot>
     <BlockSlot @name="content">
-{{#let (filter (filter-predicate 'node' filters) items) as |filtered|}}
+{{#let (filter (filter-predicate 'node' filters) this.items) as |filtered|}}
   {{#let (sort-by (comparator 'node' sort) filtered) as |sorted|}}
-      <ChangeableSet @dispatcher={{searchable 'node' sorted}} @terms={{search}}>
+      <ChangeableSet @dispatcher={{searchable 'node' sorted}} @terms={{this.search}}>
         <BlockSlot @name="set" as |searched|>
-          <ConsulNodeList @items={{searched}} @leader={{leader}} />
+          <ConsulNodeList @items={{searched}} @leader={{this.leader}} />
         </BlockSlot>
         <BlockSlot @name="empty">
           <EmptyState>

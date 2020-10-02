@@ -1,20 +1,20 @@
-{{#if (gt items.length 0)}}
-  <ListCollection @items={{items}} class="consul-service-instance-list" as |item index|>
+{{#if (gt this.items.length 0)}}
+  <ListCollection @items={{this.items}} class="consul-service-instance-list" as |item index|>
     <BlockSlot @name="header">
-      {{#if (eq routeName "dc.services.show")}}
-        <a data-test-service-name href={{href-to routeName item.Service}}>
+      {{#if (eq this.routeName "dc.services.show")}}
+        <a data-test-service-name href={{href-to this.routeName item.Service}}>
           {{item.ID}}
         </a>
       {{else}}
-        <a data-test-service-name href={{href-to routeName item.Service.Service item.Node.Node (or item.Service.ID item.Service.Service)}}>
+        <a data-test-service-name href={{href-to this.routeName item.Service.Service item.Node.Node (or item.Service.ID item.Service.Service)}}>
           {{item.Service.ID}}
         </a>
       {{/if}}
     </BlockSlot>
     <BlockSlot @name="details">
-    {{#if checks}}
+    {{#if this.checks}}
       <ConsulExternalSource @item={{item}} />
-      <ConsulInstanceChecks @type="service" @items={{get checks item.Service}} />
+      <ConsulInstanceChecks @type="service" @items={{get this.checks item.Service}} />
     {{else}}
       <ConsulExternalSource @item={{item.Service}} />
       <ConsulInstanceChecks @type="service" @items={{filter-by 'ServiceID' '' item.Checks}} />
@@ -60,7 +60,7 @@
         </dd>
       </dl>
 {{/if}}
-{{#if (and checks item.Port)}}
+{{#if (and this.checks item.Port)}}
       <dl class="port">
         <dt>
           Port
@@ -74,7 +74,7 @@
         </dd>
       </dl>
 {{/if}}
-{{#if checks}}
+{{#if this.checks}}
       <TagList @item={{item}} />
 {{else}}
       <TagList @item={{item.Service}} />

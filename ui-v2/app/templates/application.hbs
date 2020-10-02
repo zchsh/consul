@@ -1,13 +1,13 @@
 <HeadLayout />
 {{title 'Consul' separator=' - '}}
-{{#if (not-eq router.currentRouteName 'application')}}
+{{#if (not-eq this.router.currentRouteName 'application')}}
   <HashicorpConsul
     id="wrapper"
-    @permissions={{permissions}}
-    @dcs={{dcs}}
-    @dc={{or dc dcs.firstObject}}
-    @nspaces={{nspaces}}
-    @nspace={{or nspace nspaces.firstObject}}
+    @permissions={{this.permissions}}
+    @dcs={{this.dcs}}
+    @dc={{or this.dc this.dcs.firstObject}}
+    @nspaces={{this.nspaces}}
+    @nspace={{or this.nspace this.nspaces.firstObject}}
     @onchange={{action "reauthorize"}}
   >
   <Outlet

@@ -1,13 +1,13 @@
-{{#if isAuthorized }}
+{{#if this.isAuthorized }}
   {{title 'Roles'}}
 {{else}}
   {{title 'Access Controls'}}
 {{/if}}
 
-{{#let (or sortBy "Name:asc") as |sort|}}
+{{#let (or this.sortBy "Name:asc") as |sort|}}
 <AppView
-  @authorized={{isAuthorized}}
-  @enabled={{isEnabled}}
+  @authorized={{this.isAuthorized}}
+  @enabled={{this.isEnabled}}
   >
   <BlockSlot @name="notification" as |status type|>
     {{partial 'dc/acls/roles/notifications'}}
@@ -18,7 +18,7 @@
     </h1>
   </BlockSlot>
   <BlockSlot @name="nav">
-{{#if isAuthorized }}
+{{#if this.isAuthorized }}
     {{partial 'dc/acls/nav'}}
 {{/if}}
   </BlockSlot>
@@ -32,30 +32,29 @@
     <a data-test-create href="{{href-to 'dc.acls.roles.create'}}" class="type-create">Create</a>
   </BlockSlot>
   <BlockSlot @name="toolbar">
-  {{#if (gt items.length 0) }}
+  {{#if (gt this.items.length 0) }}
     <ConsulRoleSearchBar
-      @search={{search}}
-      @onsearch={{action (mut search) value="target.value"}}
-
+      @search={{this.search}}
+      @onsearch={{action (mut this.search) value="target.value"}}
       @sort={{sort}}
-      @onsort={{action (mut sortBy) value="target.selected"}}
+      @onsort={{action (mut this.sortBy) value="target.selected"}}
     />
   {{/if}}
   </BlockSlot>
   <BlockSlot @name="content">
-  {{#let (sort-by (comparator 'role' sort) items) as |sorted|}}
-    <ChangeableSet @dispatcher={{searchable 'role' sorted}} @terms={{search}}>
+  {{#let (sort-by (comparator 'role' sort) this.items) as |sorted|}}
+    <ChangeableSet @dispatcher={{searchable 'role' sorted}} @terms={{this.search}}>
       <BlockSlot @name="set" as |filtered|>
         <ConsulRoleList
           @items={{filtered}}
-          @ondelete={{action send 'delete'}}
+          @ondelete={{action this.send 'delete'}}
         />
       </BlockSlot>
       <BlockSlot @name="empty">
         <EmptyState @allowLogin={{true}}>
           <BlockSlot @name="header">
             <h2>
-              {{#if (gt items.length 0)}}
+              {{#if (gt this.items.length 0)}}
                 No roles found
               {{else}}
                 Welcome to Roles
@@ -64,7 +63,7 @@
           </BlockSlot>
           <BlockSlot @name="body">
             <p>
-              {{#if (gt items.length 0)}}
+              {{#if (gt this.items.length 0)}}
                 No roles where found matching that search, or you may not have access to view the roles you are searching for.
               {{else}}
                 There don't seem to be any roles, or you may not have access to view roles yet.

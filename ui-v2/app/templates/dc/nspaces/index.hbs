@@ -1,6 +1,6 @@
 {{title 'Namespaces'}}
-{{#let (or sortBy "Name:asc") as |sort|}}
-<EventSource @src={{items}} />
+{{#let (or this.sortBy "Name:asc") as |sort|}}
+<EventSource @src={{this.items}} />
 <AppView>
   <BlockSlot @name="notification" as |status type subject|>
     {{partial 'dc/nspaces/notifications'}}
@@ -14,29 +14,28 @@
       <a data-test-create href="{{href-to 'dc.nspaces.create'}}" class="type-create">Create</a>
   </BlockSlot>
   <BlockSlot @name="toolbar">
-  {{#if (gt items.length 0)}}
+  {{#if (gt this.items.length 0)}}
         <ConsulNspaceSearchBar
-          @search={{search}}
-          @onsearch={{action (mut search) value="target.value"}}
-
+          @search={{this.search}}
+          @onsearch={{action (mut this.search) value="target.value"}}
           @sort={{sort}}
-          @onsort={{action (mut sortBy) value="target.selected"}}
+          @onsort={{action (mut this.sortBy) value="target.selected"}}
 
         />
   {{/if}}
   </BlockSlot>
   <BlockSlot @name="content">
-  {{#let (sort-by (comparator 'nspace' sort) items) as |sorted|}}
-    <ChangeableSet @dispatcher={{searchable 'nspace' sorted}} @terms={{search}}>
+  {{#let (sort-by (comparator 'nspace' sort) this.items) as |sorted|}}
+    <ChangeableSet @dispatcher={{searchable 'nspace' sorted}} @terms={{this.search}}>
       <BlockSlot @name="set" as |filtered|>
         <ConsulNspaceList
           @items={{filtered}}
-          @ondelete={{queue (action send 'delete')}}
+          @ondelete={{queue (action this.send 'delete')}}
         >
           <EmptyState @allowLogin={{true}}>
             <BlockSlot @name="header">
               <h2>
-                {{#if (gt items.length 0)}}
+                {{#if (gt this.items.length 0)}}
                   No namespaces found
                 {{else}}
                   Welcome to Namespaces
@@ -45,7 +44,7 @@
             </BlockSlot>
             <BlockSlot @name="body">
               <p>
-                {{#if (gt items.length 0)}}
+                {{#if (gt this.items.length 0)}}
                   No namespaces where found matching that search, or you may not have access to view the namespaces you are searching for.
                 {{else}}
                   There don't seem to be any namespaces, or you may not have access to view namespaces yet.

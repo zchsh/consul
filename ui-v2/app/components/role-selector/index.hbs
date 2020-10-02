@@ -1,11 +1,11 @@
 <ModalDialog
   class="role-selector"
   data-test-role-form
-  @onclose={{action (mut state) "role"}}
+  @onclose={{action (mut this.state) "role"}}
   @name="new-role-toggle"
 >
   <BlockSlot @name="header">
-{{#if (eq state 'role')}}
+{{#if (eq this.state 'role')}}
     <h2>New Role</h2>
 {{else}}
     <h2>New Policy</h2>
@@ -13,13 +13,13 @@
   </BlockSlot>
   <BlockSlot @name="body">
 
-  <input id="{{name}}_state_role" type="radio" name="{{name}}[state]" value="role" checked={{if (eq state 'role') 'checked'}} onchange={{action 'change'}} />
-    <RoleForm @form={{form}} @dc={{dc}} @nspace={{nspace}}>
+  <input id="{{this.name}}_state_role" type="radio" name="{{this.name}}[state]" value="role" checked={{if (eq this.state 'role') 'checked'}} onchange={{action 'change'}} />
+    <RoleForm @form={{form}} @dc={{this.dc}} @nspace={{this.nspace}}>
       <BlockSlot @name="policy">
 
-        <PolicySelector @source={{source}} @dc={{dc}} @nspace={{nspace}} @items={{item.Policies}}>
+        <PolicySelector @source={{source}} @dc={{this.dc}} @nspace={{this.nspace}} @items={{this.item.Policies}}>
           <BlockSlot @name="trigger">
-            <label for="{{name}}_state_policy" data-test-create-policy class="type-dialog">
+            <label for="{{this.name}}_state_policy" data-test-create-policy class="type-dialog">
               <span>Create new policy</span>
             </label>
           </BlockSlot>
@@ -28,34 +28,34 @@
       </BlockSlot>
     </RoleForm>
 
-    <input id="{{name}}_state_policy" type="radio" name="{{name}}[state]" value="policy" checked={{if (eq state 'policy') 'checked'}} onchange={{action 'change'}} />
-    <PolicyForm data-test-policy-form @name="role[policy]" @form={{policyForm}} @dc={{dc}} />
+    <input id="{{this.name}}_state_policy" type="radio" name="{{this.name}}[state]" value="policy" checked={{if (eq this.state 'policy') 'checked'}} onchange={{action 'change'}} />
+    <PolicyForm data-test-policy-form @name="role[policy]" @form={{this.policyForm}} @dc={{this.dc}} />
 
   </BlockSlot>
   <BlockSlot @name="actions" as |close|>
 
-{{#if (eq state 'role')}}
-    <button type="submit" {{action 'save' item items (queue (action close) (action 'reset'))}} disabled={{if (or item.isSaving item.isPristine item.isInvalid) 'disabled'}}>
-      {{#if item.isSaving }}
+{{#if (eq this.state 'role')}}
+    <button type="submit" {{action 'save' this.item this.items (queue (action close) (action 'reset'))}} disabled={{if (or this.item.isSaving this.item.isPristine this.item.isInvalid) 'disabled'}}>
+      {{#if this.item.isSaving }}
         <div class="progress indeterminate"></div>
       {{/if}}
       <span>Create and apply</span>
     </button>
-    <button type="reset" disabled={{if item.isSaving 'disabled'}} {{action (queue (action close) (action 'reset'))}}>Cancel</button>
+    <button type="reset" disabled={{if this.item.isSaving 'disabled'}} {{action (queue (action close) (action 'reset'))}}>Cancel</button>
 {{else}}
-    <button type="submit" {{action 'dispatch' 'save' (array policy item.Policies (action (mut state) 'role'))}} disabled={{if (or policy.isSaving policy.isPristine policy.isInvalid) 'disabled'}}>
-      {{#if policy.isSaving }}
+    <button type="submit" {{action 'dispatch' 'save' (array this.policy this.item.Policies (action (mut this.state) 'role'))}} disabled={{if (or this.policy.isSaving this.policy.isPristine this.policy.isInvalid) 'disabled'}}>
+      {{#if this.policy.isSaving }}
         <div class="progress indeterminate"></div>
       {{/if}}
       <span>Create and apply</span>
     </button>
-    <button type="reset" disabled={{if policy.isSaving 'disabled'}} {{action (mut state) 'role'}}>Cancel</button>
+    <button type="reset" disabled={{if this.policy.isSaving 'disabled'}} {{action (mut this.state) 'role'}}>Cancel</button>
 {{/if}}
 
   </BlockSlot>
 </ModalDialog>
 
-<ChildSelector @repo={{repo}} @dc={{dc}} @nspace={{nspace}} @type="role" @placeholder="Search for role" @items={{items}}>
+<ChildSelector @repo={{this.repo}} @dc={{this.dc}} @nspace={{this.nspace}} @type="role" @placeholder="Search for role" @items={{this.items}}>
   <BlockSlot @name="label">
     Apply an existing role
   </BlockSlot>
@@ -72,7 +72,7 @@
     <TabularCollection
         data-test-roles
         @rows={{5}}
-        @items={{sort-by 'CreateTime:desc' 'Name:asc' items}} as |item index|
+        @items={{sort-by 'CreateTime:desc' 'Name:asc' this.items}} as |item index|
     >
       <BlockSlot @name="header">
         <th>Name</th>
@@ -109,7 +109,7 @@
                     </div>
                     <ul>
                       <li class="dangerous">
-                        <button tabindex="-1" type="button" class="type-delete" onclick={{action send 'remove' item items}}>Remove</button>
+                        <button tabindex="-1" type="button" class="type-delete" onclick={{action send 'remove' item this.items}}>Remove</button>
                       </li>
                       <li>
                         <label for={{confirm}}>Cancel</label>

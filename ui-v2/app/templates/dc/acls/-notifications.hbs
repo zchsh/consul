@@ -1,29 +1,29 @@
-{{#if (eq type 'create')}}
-  {{#if (eq status 'success') }}
+{{#if (eq this.type 'create')}}
+  {{#if (eq this.status 'success') }}
     Your ACL token has been added.
   {{else}}
     There was an error adding your ACL token.
   {{/if}}
-{{else if (eq type 'update') }}
-  {{#if (eq status 'success') }}
+{{else if (eq this.type 'update') }}
+  {{#if (eq this.status 'success') }}
     Your ACL token has been saved.
   {{else}}
     There was an error saving your ACL token.
   {{/if}}
-{{ else if (eq type 'delete')}}
-  {{#if (eq status 'success') }}
+{{ else if (eq this.type 'delete')}}
+  {{#if (eq this.status 'success') }}
     Your ACL token was deleted.
   {{else}}
     There was an error deleting your ACL token.
   {{/if}}
-{{ else if (eq type 'use')}}
-  {{#if (eq status 'success') }}
+{{ else if (eq this.type 'use')}}
+  {{#if (eq this.status 'success') }}
     Now using new ACL token.
   {{else}}
     There was an error using that ACL token.
   {{/if}}
-{{ else if (eq type 'clone')}}
-  {{#if (eq status 'success') }}
+{{ else if (eq this.type 'clone')}}
+  {{#if (eq this.status 'success') }}
     Your ACL token was cloned.
   {{else}}
     There was an error cloning your ACL token.

@@ -1,7 +1,7 @@
 <TabularCollection
   data-test-metadata
   class="consul-metadata-list"
-  @items={{items}} as |item index|
+  @items={{this.items}} as |item index|
 >
     <BlockSlot @name="header">
         <th>Key</th>

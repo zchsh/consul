@@ -4,26 +4,26 @@
       <dl>
         <dt>Destination</dt>
         <dd>
-          {{item.DestinationName}}{{#if (env "CONSUL_NSPACES_ENABLED")}} / {{item.DestinationNS}}{{/if}}
+          {{this.item.DestinationName}}{{#if (env "CONSUL_NSPACES_ENABLED")}} / {{this.item.DestinationNS}}{{/if}}
         </dd>
         <dt>Source</dt>
         <dd>
-        {{item.SourceName}}{{#if (env "CONSUL_NSPACES_ENABLED")}} / {{item.SourceNS}}{{/if}}
+        {{this.item.SourceName}}{{#if (env "CONSUL_NSPACES_ENABLED")}} / {{this.item.SourceNS}}{{/if}}
         </dd>
-{{#if item.Action}}
+{{#if this.item.Action}}
         <dt>Action</dt>
         <dd>
-          {{item.Action}}
+          {{this.item.Action}}
         </dd>
 {{/if}}
         <dt>Description</dt>
         <dd>
-          {{or item.Description 'N/A'}}
+          {{or this.item.Description 'N/A'}}
         </dd>
       </dl>
   </div>
 
-{{#if (gt item.Permissions.length 0) }}
+{{#if (gt this.item.Permissions.length 0) }}
   <h2>Permissions</h2>
   <div class="notice info">
     <p>
@@ -35,7 +35,7 @@
   </div>
 
   <ConsulIntentionPermissionList
-    @items={{item.Permissions}}
+    @items={{this.item.Permissions}}
   />
 {{/if}}
 

@@ -1,8 +1,8 @@
-<EventSource @src={{sessions}} />
+<EventSource @src={{this.sessions}} />
 <div id="lock-sessions" class="tab-section">
   <div role="tabpanel">
-{{#if (gt sessions.length 0)}}
-    <ConsulLockSessionList @items={{sessions}} @onInvalidate={{action send 'invalidateSession'}}/>
+{{#if (gt this.sessions.length 0)}}
+    <ConsulLockSessionList @items={{this.sessions}} @onInvalidate={{action this.send 'invalidateSession'}} />
 {{else}}
     <EmptyState>
       <BlockSlot @name="body">

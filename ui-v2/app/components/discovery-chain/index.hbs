@@ -1,7 +1,7 @@
-{{#if isDisplayed }}
+{{#if this.isDisplayed }}
   <style>
-    {{#if selected.nodes }}
-      {{selected.nodes}} {
+    {{#if this.selected.nodes }}
+      {{this.selected.nodes}} {
         opacity: 1 !important;
 
         background-color: var(--white);
@@ -11,8 +11,8 @@
         box-shadow: var(--decor-elevation-600);
       }
     {{/if}}
-    {{#if selected.edges }}
-      {{selected.edges}} {
+    {{#if this.selected.edges }}
+      {{this.selected.edges}} {
         opacity: 1;
       }
     {{/if}}
@@ -20,14 +20,14 @@
   <div class="routes">
     <header>
       <h2>
-        {{chain.ServiceName}} Router
+        {{this.chain.ServiceName}} Router
         <span>
           <em role="tooltip">Use routers to intercept traffic using L7 criteria such as path prefixes or http headers.</em>
         </span>
       </h2>
     </header>
     <div role="group">
-      {{#each routes as |item|}}
+      {{#each this.routes as |item|}}
         <RouteCard @item={{item}} @onclick={{action "click"}} />
       {{/each}}
     </div>
@@ -42,7 +42,7 @@
       </h2>
     </header>
     <div role="group">
-      {{#each (sort-by 'Name' splitters) as |item|}}
+      {{#each (sort-by 'Name' this.splitters) as |item|}}
         <SplitterCard @item={{item}} @onclick={{action "click"}} />
       {{/each}}
     </div>
@@ -57,13 +57,13 @@
       </h2>
     </header>
     <div role="group">
-      {{#each (sort-by 'Name' resolvers) as |item|}}
+      {{#each (sort-by 'Name' this.resolvers) as |item|}}
         <ResolverCard @item={{item}} @onclick={{action "click"}} />
       {{/each}}
     </div>
   </div>
-  <svg width="100%" height="100%" viewBox={{concat '0 0 ' width ' ' height}} preserveAspectRatio="none">
-    {{#each routes as |item|}}
+  <svg width="100%" height="100%" viewBox={{concat '0 0 ' this.width ' ' this.height}} preserveAspectRatio="none">
+    {{#each this.routes as |item|}}
       {{#let (dom-position (concat '#' item.ID)) as |src|}}
         {{#let (dom-position (concat '#' item.NextNode)) as |destRect|}}
           {{#let (tween-to (hash
@@ -84,7 +84,7 @@
         {{/let}}
       {{/let}}
     {{/each}}
-    {{#each splitters as |splitter|}}
+    {{#each this.splitters as |splitter|}}
       {{#let (dom-position (concat '#' splitter.ID)) as |src|}}
         {{#each splitter.Splits as |item index|}}
           {{#let (dom-position (concat '#' item.NextNode)) as |destRect|}}
@@ -110,15 +110,15 @@
       {{/let}}
     {{/each}}
   </svg>
-  <svg class="resolver-inlets" viewBox={{concat '0 0 10 ' height}}>
-    {{#each routes as |item|}}
+  <svg class="resolver-inlets" viewBox={{concat '0 0 10 ' this.height}}>
+    {{#each this.routes as |item|}}
       {{#if (starts-with 'resolver:' item.NextNode) }}
         {{#let (dom-position (concat '#' item.NextNode)) as |dest|}}
           <circle r="2.5" cx="5" cy={{add dest.y (div dest.height 2)}} />
         {{/let}}
       {{/if}}
     {{/each}}
-    {{#each splitters as |item|}}
+    {{#each this.splitters as |item|}}
         {{#each item.Splits as |item|}}
           {{#let (dom-position (concat '#' item.NextNode)) as |dest|}}
             <circle r="2.5" cx="5" cy={{add dest.y (div dest.height 2)}} />
@@ -126,8 +126,8 @@
         {{/each}}
     {{/each}}
   </svg>
-  <svg class="splitter-inlets" viewBox={{concat '0 0 10 ' height}}>
-    {{#each routes as |item|}}
+  <svg class="splitter-inlets" viewBox={{concat '0 0 10 ' this.height}}>
+    {{#each this.routes as |item|}}
       {{#if (starts-with 'splitter:' item.NextNode) }}
         {{#let (dom-position (concat '#' item.NextNode)) as |dest|}}
           <circle r="2.5" cx="5" cy={{add dest.y (div dest.height 2)}} />
@@ -135,7 +135,7 @@
       {{/if}}
     {{/each}}
   </svg>
-  <div class={{concat 'tooltip' (if activeTooltip ' active' '')}} style={{{ concat 'top:' y 'px;left:' x 'px;'}}}>
-    <span role="tooltip">{{round tooltip decimals=2}}%</span>
+  <div class={{concat 'tooltip' (if this.activeTooltip ' active' '')}} style={{{ concat 'top:' this.y 'px;left:' this.x 'px;'}}}>
+    <span role="tooltip">{{round this.tooltip decimals=2}}%</span>
   </div>
 {{/if}}

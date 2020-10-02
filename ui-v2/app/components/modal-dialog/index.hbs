@@ -2,7 +2,7 @@
 <Portal @target="modal">
   {{yield}}
   <div {{ref this 'modal'}}  ...attributes>
-    <input id={{name}} type="radio" name="modal" data-checked="{{checked}}" checked={{checked}} onchange={{action 'change'}} />
+    <input id={{this.name}} type="radio" name="modal" data-checked="{{this.checked}}" checked={{this.checked}} onchange={{action 'change'}} />
     <div role="dialog" aria-modal="true">
       <label for="modal_close"></label>
       <div>

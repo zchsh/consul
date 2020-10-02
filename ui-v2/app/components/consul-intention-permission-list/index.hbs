@@ -1,12 +1,12 @@
-{{#if (gt items.length 0)}}
+{{#if (gt this.items.length 0)}}
 <ListCollection
-  class="consul-intention-permission-list{{if (not onclick) ' readonly'}}"
+  class="consul-intention-permission-list{{if (not this.onclick) ' readonly'}}"
   @scroll="native"
-  @items={{items}}
+  @items={{this.items}}
   @cellHeight={{42}}
 as |item|>
   <BlockSlot @name="details">
-    <div onclick={{action (optional onclick) item}}>
+    <div onclick={{action (optional this.onclick) item}}>
       <strong class={{concat 'intent-' item.Action}}>{{item.Action}}</strong>
 {{#if (gt item.HTTP.Methods.length 0)}}
         <dl class="permission-methods">
@@ -48,15 +48,15 @@ as |item|>
 {{/each}}
     </div>
   </BlockSlot>
-{{#if onclick}}
+{{#if this.onclick}}
   <BlockSlot @name="actions" as |Actions|>
     <Actions as |Action|>
-      <Action data-test-edit-action @onclick={{action (optional onclick) item}} @close={{true}}>
+      <Action data-test-edit-action @onclick={{action (optional this.onclick) item}} @close={{true}}>
         <BlockSlot @name="label">
           Edit
         </BlockSlot>
       </Action>
-      <Action data-test-delete-action @onclick={{action ondelete item}} class="dangerous">
+      <Action data-test-delete-action @onclick={{action this.ondelete item}} class="dangerous">
         <BlockSlot @name="label">
           Delete
         </BlockSlot>

@@ -1,21 +1,19 @@
 <div id="services" class="tab-section">
   <div role="tabpanel">
 {{#let (hash
-  instances=(if instance (split instance ',') undefined)
+  instances=(if this.instance (split this.instance ',') undefined)
 ) as |filters|}}
-  {{#let (or sortBy "Name:asc") as |sort|}}
-{{#if (gt gatewayServices.length 0)}}
+  {{#let (or this.sortBy "Name:asc") as |sort|}}
+{{#if (gt this.gatewayServices.length 0)}}
     <input type="checkbox" id="toolbar-toggle" />
     <ConsulUpstreamSearchBar
-      @search={{search}}
-      @onsearch={{action (mut search) value="target.value"}}
-
+      @search={{this.search}}
+      @onsearch={{action (mut this.search) value="target.value"}}
       @sort={{sort}}
-      @onsort={{action (mut sortBy) value="target.selected"}}
-
+      @onsort={{action (mut this.sortBy) value="target.selected"}}
       @filter={{filters}}
       @onfilter={{hash
-        instance=(action (mut instance) value="target.selectedItems")
+        instance=(action (mut this.instance) value="target.selectedItems")
       }}
       />
 {{/if}}
@@ -23,13 +21,13 @@
       The following services may receive traffic from external services through this gateway. Learn more about configuring gateways in our
       <a href="{{env 'CONSUL_DOCS_URL'}}/connect/terminating-gateway" target="_blank" rel="noopener noreferrer">step-by-step guide</a>.
     </p>
-{{#let (filter (filter-predicate 'service' filters) gatewayServices) as |filtered|}}
+{{#let (filter (filter-predicate 'service' filters) this.gatewayServices) as |filtered|}}
   {{#let (sort-by (comparator 'service' sort) filtered) as |sorted|}}
-      <ChangeableSet @dispatcher={{searchable 'service' sorted}} @terms={{search}}>
+      <ChangeableSet @dispatcher={{searchable 'service' sorted}} @terms={{this.search}}>
         <BlockSlot @name="set" as |searched|>
           <ConsulServiceList
             @items={{searched}}
-            @nspace={{nspace}}
+            @nspace={{this.nspace}}
           />
         </BlockSlot>
         <BlockSlot @name="empty">

@@ -1,14 +1,14 @@
 {{yield}}
-<form class={{concat 'filter-bar' (if (eq secondary 'sort') ' with-sort')}} ...attributes>
+<form class={{concat 'filter-bar' (if (eq this.secondary 'sort') ' with-sort')}} ...attributes>
     {{#yield-slot name="primary"}}
       <fieldset>
         {{yield}}
       </fieldset>
     {{else}}
       <FreetextFilter
-        @onsearch={{action onsearch}}
-        @value={{value}}
-        @placeholder={{or placeholder 'Search'}}
+        @onsearch={{action this.onsearch}}
+        @value={{this.value}}
+        @placeholder={{or this.placeholder 'Search'}}
       />
     {{/yield-slot}}
     {{#yield-slot name="secondary"}}
@@ -16,14 +16,14 @@
         {{yield}}
       </fieldset>
     {{else}}
-      {{#if options}}
-        {{#if (eq secondary 'sort')}}
+      {{#if this.options}}
+        {{#if (eq this.secondary 'sort')}}
         {{else}}
           <RadioGroup
             @keyboardAccess={{true}}
-            @value={{selected.key}}
-            @items={{options}}
-            @onchange={{action onchange}}
+            @value={{this.selected.key}}
+            @items={{this.options}}
+            @onchange={{action this.onchange}}
           />
         {{/if}}
       {{/if}}

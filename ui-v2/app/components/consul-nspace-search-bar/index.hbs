@@ -1,7 +1,7 @@
 <form class="filter-bar">
   <FreetextFilter
-    @onsearch={{action onsearch}}
-    @value={{search}}
+    @onsearch={{action this.onsearch}}
+    @value={{this.search}}
     @placeholder="Search"
   />
   <div class="sort">
@@ -9,7 +9,7 @@
       class="type-sort"
       data-test-sort-control
       @position="right"
-      @onchange={{action onsort}}
+      @onchange={{action this.onsort}}
       @multiple={{false}}
     as |components|>
       <BlockSlot @name="selected">
@@ -20,15 +20,15 @@
               ))
             as |selectable|
           }}
-            {{get selectable sort}}
+            {{get selectable this.sort}}
           {{/let}}
         </span>
       </BlockSlot>
       <BlockSlot @name="options">
 {{#let components.Optgroup components.Option as |Optgroup Option|}}
         <Optgroup @label="Name">
-          <Option @value="Name:asc" @selected={{eq "Name:asc" sort}}>A to Z</Option>
-          <Option @value="Name:desc" @selected={{eq "Name:desc" sort}}>Z to A</Option>
+          <Option @value="Name:asc" @selected={{eq "Name:asc" this.sort}}>A to Z</Option>
+          <Option @value="Name:desc" @selected={{eq "Name:desc" this.sort}}>Z to A</Option>
         </Optgroup>
 {{/let}}
       </BlockSlot>

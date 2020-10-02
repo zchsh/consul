@@ -1,6 +1,6 @@
 {{yield}}
 <div class="empty-state" ...attributes>
-{{#if hasHeader}}
+{{#if this.hasHeader}}
   <header>
     {{#yield-slot name="header"}}
       {{yield}}
@@ -13,13 +13,13 @@
   {{#yield-slot name="body"}}
     <div>
       {{yield}}
-      {{#if (and (env 'CONSUL_ACLS_ENABLED') allowLogin)}}
+      {{#if (and (env 'CONSUL_ACLS_ENABLED') this.allowLogin)}}
         <label for="login-toggle" data-test-empty-state-login>
           <DataSource
             @src="settings://consul:token"
-            @onchange={{action (mut token) value="data"}}
+            @onchange={{action (mut this.token) value="data"}}
           />
-          {{#if token.AccessorID}}
+          {{#if this.token.AccessorID}}
             Log in with a different token
           {{else}}
             Log in

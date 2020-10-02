@@ -3,25 +3,25 @@
   <YieldSlot @name="create">{{yield}}</YieldSlot>
   <label class="type-text">
     <span><YieldSlot @name="label">{{yield}}</YieldSlot></span>
-    {{#if isOpen}}
+    {{#if this.isOpen}}
       <DataSource
-        @src={{concat '/' (or nspace 'default') '/' dc '/' (pluralize type)}}
-        @onchange={{action (mut allOptions) value="data"}}
+        @src={{concat '/' (or this.nspace 'default') '/' this.dc '/' (pluralize this.type)}}
+        @onchange={{action (mut this.allOptions) value="data"}}
       />
     {{/if}}
       <PowerSelect
           @search={{action "search"}}
-          @options={{options}}
+          @options={{this.options}}
           @loadingMessage="Loading..."
           @searchMessage="No possible options"
-          @searchPlaceholder={{placeholder}}
-          @onOpen={{action (mut isOpen) true}}
-          @onClose={{action (mut isOpen) false}}
-          @onChange={{action "change" "items[]" items}} as |item|>
+          @searchPlaceholder={{this.placeholder}}
+          @onOpen={{action (mut this.isOpen) true}}
+          @onClose={{action (mut this.isOpen) false}}
+          @onChange={{action "change" "items[]" this.items}} as |item|>
         <YieldSlot @name="option" @params={{block-params item}}>{{yield}}</YieldSlot>
       </PowerSelect>
   </label>
-{{#if (gt items.length 0)}}
+{{#if (gt this.items.length 0)}}
   <YieldSlot @name="set">{{yield}}</YieldSlot>
 {{else}}
 

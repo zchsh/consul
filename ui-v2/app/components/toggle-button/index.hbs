@@ -2,11 +2,11 @@
   ...attributes
   {{ref this "input"}}
   type="checkbox"
-  checked={{if checked 'checked' undefined}}
-  id={{concat 'toggle-button-' guid}}
+  checked={{if this.checked 'checked' undefined}}
+  id={{concat 'toggle-button-' this.guid}}
   onchange={{action 'change'}}
 />
-<label {{ref this "label"}} for={{concat 'toggle-button-' guid}}>
+<label {{ref this "label"}} for={{concat 'toggle-button-' this.guid}}>
   {{yield (hash
     click=(action 'click')
   )}}

@@ -1,5 +1,5 @@
-{{#if (gt items.length 0)}}
-<ListCollection @items={{items}} class="consul-node-list" as |item index|>
+{{#if (gt this.items.length 0)}}
+<ListCollection @items={{this.items}} class="consul-node-list" as |item index|>
   <BlockSlot @name="header">
     <dl class={{item.Status}}>
       <dt>
@@ -24,8 +24,8 @@
     </a>
   </BlockSlot>
   <BlockSlot @name="details">
-  {{#if (eq item.Address leader.Address)}}
-    <span class="leader" data-test-leader={{leader.Address}}>Leader</span>
+  {{#if (eq item.Address this.leader.Address)}}
+    <span class="leader" data-test-leader={{this.leader.Address}}>Leader</span>
   {{/if}}
   {{#if (gt item.Services.length 0)}}
     <span>

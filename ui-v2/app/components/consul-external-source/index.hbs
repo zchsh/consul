@@ -1,9 +1,9 @@
-{{#if item}}
-  {{#let (service/external-source item) as |externalSource|}}
+{{#if this.item}}
+  {{#let (service/external-source this.item) as |externalSource|}}
     {{#if externalSource}}
       <span data-test-external-source={{externalSource}} class="consul-external-source {{externalSource}}">
-        {{#if label}}
-          {{label}}
+        {{#if this.label}}
+          {{this.label}}
         {{else}}
           {{#if (eq externalSource 'aws')}}
             Registered via {{uppercase externalSource}}

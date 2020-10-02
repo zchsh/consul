@@ -1,9 +1,9 @@
-{{title item.Node}}
+{{title this.item.Node}}
 <DataLoader as |api|>
 
   <BlockSlot @name="data">
-    <EventSource @src={{tomography}} />
-    <EventSource @src={{item}} @onerror={{queue (action api.dispatchError)}} />
+    <EventSource @src={{this.tomography}} />
+    <EventSource @src={{this.item}} @onerror={{queue (action api.dispatchError)}} />
   </BlockSlot>
 
   <BlockSlot @name="error">
@@ -41,7 +41,7 @@
         </BlockSlot>
         <BlockSlot @name="header">
             <h1>
-              {{ item.Node }}
+              {{ this.item.Node }}
             </h1>
             <label for="toolbar-toggle"></label>
         </BlockSlot>
@@ -51,18 +51,18 @@
                   (array
                               (hash label="Health Checks" href=(href-to "dc.nodes.show.healthchecks") selected=(is-href "dc.nodes.show.healthchecks"))
                               (hash label="Service Instances" href=(href-to "dc.nodes.show.services") selected=(is-href "dc.nodes.show.services"))
-    (if tomography.distances  (hash label="Round Trip Time" href=(href-to "dc.nodes.show.rtt") selected=(is-href "dc.nodes.show.rtt")) '')
+                              (if this.tomography.distances  (hash label="Round Trip Time" href=(href-to "dc.nodes.show.rtt") selected=(is-href "dc.nodes.show.rtt"))  '')
                               (hash label="Lock Sessions" href=(href-to "dc.nodes.show.sessions") selected=(is-href "dc.nodes.show.sessions"))
                               (hash label="Metadata" href=(href-to "dc.nodes.show.metadata") selected=(is-href "dc.nodes.show.metadata"))
                   )
-            }}/>
+            }} />
         </BlockSlot>
         <BlockSlot @name="actions">
-          <CopyButton @value={{item.Address}} @name="Address">{{item.Address}}</CopyButton>
+          <CopyButton @value={{this.item.Address}} @name="Address">{{this.item.Address}}</CopyButton>
         </BlockSlot>
         <BlockSlot @name="content">
           <Outlet
-            @name={{routeName}}
+            @name={{this.routeName}}
           as |o|>
             {{outlet}}
           </Outlet>

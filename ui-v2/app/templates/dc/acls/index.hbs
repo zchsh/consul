@@ -1,9 +1,9 @@
-{{#let (filter-by "Type" "client" items) as |client|}}
+{{#let (filter-by "Type" "client" this.items) as |client|}}
   {{#let (selectable-key-values
-      (array "" (concat "All (" items.length ")"))
-      (array "management" (concat "Management (" (sub items.length client.length) ")"))
+      (array "" (concat "All (" this.items.length ")"))
+      (array "management" (concat "Management (" (sub this.items.length client.length) ")"))
       (array "client" (concat "Client (" client.length ")"))
-        selected=filterBy
+        selected=this.filterBy
     )
     as |filter|
   }}
@@ -13,7 +13,7 @@
   </BlockSlot>
   <BlockSlot @name="header">
     <h1>
-        ACL Tokens <em>{{format-number items.length}} total</em>
+        ACL Tokens <em>{{format-number this.items.length}} total</em>
     </h1>
     <label for="toolbar-toggle"></label>
   </BlockSlot>
@@ -21,19 +21,19 @@
     <a data-test-create href="{{href-to 'dc.acls.create'}}" class="type-create">Create</a>
   </BlockSlot>
   <BlockSlot @name="toolbar">
-{{#if (gt items.length 0) }}
+{{#if (gt this.items.length 0) }}
     <SearchBar
       data-test-acl-filter="true"
-      @value={{search}}
-      @onsearch={{action (mut search) value="target.value"}}
+      @value={{this.search}}
+      @onsearch={{action (mut this.search) value="target.value"}}
       @selected={{filter.selected}}
       @options={{filter.items}}
-      @onchange={{action (mut filterBy) value='target.value'}}
+      @onchange={{action (mut this.filterBy) value='target.value'}}
     />
 {{/if}}
   </BlockSlot>
   <BlockSlot @name="content">
-    <ChangeableSet @dispatcher={{searchable 'acl' (if (eq filter.selected.key "") items (filter-by "Type" filter.selected.key items))}} @terms={{search}}>
+    <ChangeableSet @dispatcher={{searchable 'acl' (if (eq filter.selected.key "") this.items (filter-by "Type" filter.selected.key this.items))}} @terms={{this.search}}>
       <BlockSlot @name="set" as |filtered|>
         <TabularCollection @items={{sort-by "Name:asc" filtered}} as |item index|>
           <BlockSlot @name="header">
@@ -61,7 +61,7 @@
                   <li role="none">
                     <a data-test-edit role="menuitem" tabindex="-1" href={{href-to 'dc.acls.edit' item.ID}}>Edit</a>
                   </li>
-      {{#if (eq item.ID token.SecretID) }}
+      {{#if (eq item.ID this.token.SecretID) }}
                   <li role="none">
                     <label for={{concat confirm 'logout'}} role="menuitem" tabindex="-1" onkeypress={{keypressClick}} data-test-logout>Stop using</label>
                     <div role="menu">
@@ -147,7 +147,7 @@
         <EmptyState @allowLogin={{true}}>
           <BlockSlot @name="header">
             <h2>
-              {{#if (gt items.length 0)}}
+              {{#if (gt this.items.length 0)}}
                 No ACLs found
               {{else}}
                 Welcome to ACLs
@@ -156,7 +156,7 @@
           </BlockSlot>
           <BlockSlot @name="body">
             <p>
-              {{#if (gt items.length 0)}}
+              {{#if (gt this.items.length 0)}}
                 No ACLs where found matching that search, or you may not have access to view the ACLs you are searching for.
               {{else}}
                 There don't seem to be any ACLs yet, or you may not have access to view ACLs yet.

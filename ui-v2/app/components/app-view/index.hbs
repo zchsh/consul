@@ -1,7 +1,7 @@
 <div class="app-view">
   {{yield}}
   <header>
-  {{#each flashMessages.queue as |flash|}}
+  {{#each this.flashMessages.queue as |flash|}}
       <FlashMessage @flash={{flash}} as |component flash|>
     {{#if flash.dom}}
           {{{flash.dom}}}
@@ -50,7 +50,7 @@
   {{/each}}
       <div>
           <div>
-    {{#if authorized}}
+    {{#if this.authorized}}
               <nav aria-label="Breadcrumb">
                   <YieldSlot @name="breadcrumbs">{{yield}}</YieldSlot>
               </nav>
@@ -60,7 +60,7 @@
                     {{yield}}
                 </YieldSlot>
                 <div class="actions">
-          {{#if authorized}}
+          {{#if this.authorized}}
                     <YieldSlot @name="actions">
                       <PortalTarget @name="app-view-actions" />
                       {{yield}}
@@ -73,7 +73,7 @@
               </YieldSlot>
           </div>
       </div>
-    {{#if authorized}}
+    {{#if this.authorized}}
       <YieldSlot @name="toolbar">
         <input type="checkbox" id="toolbar-toggle" />
         {{yield}}
@@ -81,7 +81,7 @@
     {{/if}}
   </header>
   <div>
-      {{#if (not enabled) }}
+      {{#if (not this.enabled) }}
         <YieldSlot @name="disabled">{{yield}}</YieldSlot>
       {{else}}
         <YieldSlot @name="content">{{yield}}</YieldSlot>

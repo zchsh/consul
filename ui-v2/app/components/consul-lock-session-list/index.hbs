@@ -1,5 +1,5 @@
-{{#if (gt items.length 0)}}
-<ListCollection @items={{items}} class="consul-lock-session-list" as |item index|>
+{{#if (gt this.items.length 0)}}
+<ListCollection @items={{this.items}} class="consul-lock-session-list" as |item index|>
   <BlockSlot @name="header">
     <span>{{item.Name}}</span>
   </BlockSlot>
@@ -56,7 +56,7 @@
           <button data-test-delete
             type="button"
             class="type-delete"
-            onclick={{queue (action confirm onInvalidate item) (refresh-route)}}
+            onclick={{queue (action confirm this.onInvalidate item) (refresh-route)}}
           >
             Invalidate
           </button>

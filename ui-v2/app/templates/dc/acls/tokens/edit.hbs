@@ -1,5 +1,5 @@
-{{#if isAuthorized }}
-  {{#if create}}
+{{#if this.isAuthorized }}
+  {{#if this.create}}
     {{title 'New Token'}}
   {{else}}
     {{title 'Edit Token'}}
@@ -8,8 +8,8 @@
   {{title 'Access Controls'}}
 {{/if}}
 <AppView
-  @authorized={{isAuthorized}}
-  @enabled={{isEnabled}}
+  @authorized={{this.isAuthorized}}
+  @enabled={{this.isEnabled}}
   >
     <BlockSlot @name="notification" as |status type item error|>
       {{partial 'dc/acls/tokens/notifications'}}
@@ -27,8 +27,8 @@
     </BlockSlot>
     <BlockSlot @name="header">
         <h1>
-{{#if isAuthorized }}
-  {{#if create }}
+{{#if this.isAuthorized }}
+  {{#if this.create }}
             New Token
   {{else}}
             Edit Token
@@ -39,11 +39,11 @@
         </h1>
     </BlockSlot>
     <BlockSlot @name="actions">
-{{#if (not create)}}
-  {{#if (not-eq item.AccessorID token.AccessorID)}}
+{{#if (not this.create)}}
+  {{#if (not-eq this.item.AccessorID this.token.AccessorID)}}
       <ConfirmationDialog @message="Are you sure you want to use this ACL token?">
         <BlockSlot @name="action" as |confirm|>
-            <button data-test-use type="button" {{ action confirm 'use' item }}>Use</button>
+            <button data-test-use type="button" {{ action confirm 'use' this.item }}>Use</button>
         </BlockSlot>
         <BlockSlot @name="dialog" as |execute cancel message|>
           <p>
@@ -54,30 +54,30 @@
         </BlockSlot>
       </ConfirmationDialog>
   {{/if}}
-  {{#if (not (token/is-legacy item))}}
-      <button data-test-clone type="button" {{ action "clone" item }}>Duplicate</button>
+  {{#if (not (token/is-legacy this.item))}}
+      <button data-test-clone type="button" {{ action "clone" this.item }}>Duplicate</button>
   {{/if}}
 {{/if}}
     </BlockSlot>
     <BlockSlot @name="content">
-        {{#if (token/is-legacy item)}}
+        {{#if (token/is-legacy this.item)}}
             <p class="notice info"><strong>Update.</strong> We have upgraded our ACL system by allowing you to create reusable policies which you can then apply to tokens. Don't worry, even though this token was written in the old style, it is still valid. However, we do recommend upgrading your old tokens to the new style. Learn how in our <a href="{{env 'CONSUL_DOCS_URL'}}/guides/acl-migrate-tokens.html" target="_blank" rel="noopener noreferrer">documentation</a>.</p>
         {{/if}}
-{{#if (not create) }}
+{{#if (not this.create) }}
       <div class="definition-table">
           <dl>
             <dt>AccessorID</dt>
             <dd>
-              <CopyButton @value={{item.AccessorID}} @name="AccessorID" @position="top-start" /> {{item.AccessorID}}
+              <CopyButton @value={{this.item.AccessorID}} @name="AccessorID" @position="top-start" /> {{this.item.AccessorID}}
             </dd>
             <dt>Token</dt>
             <dd>
-              <CopyButton @value={{item.SecretID}} @name="Token" @position="top-start" /> <SecretButton>{{item.SecretID}}</SecretButton>
+              <CopyButton @value={{this.item.SecretID}} @name="Token" @position="top-start" /> <SecretButton>{{this.item.SecretID}}</SecretButton>
             </dd>
-{{#if (and (not (token/is-legacy item)) (not create))}}
+{{#if (and (not (token/is-legacy this.item)) (not this.create))}}
             <dt>Scope</dt>
             <dd>
-              {{if item.Local 'local' 'global' }}
+              {{if this.item.Local 'local' 'global' }}
             </dd>
 {{/if}}
           </dl>

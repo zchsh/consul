@@ -6,23 +6,23 @@
               Minimum
           </dt>
           <dd>
-              {{format-number tomography.min maximumFractionDigits=2}}ms
+              {{format-number this.tomography.min maximumFractionDigits=2}}ms
           </dd>
           <dt>
               Median
           </dt>
           <dd>
-              {{format-number tomography.median maximumFractionDigits=2}}ms
+              {{format-number this.tomography.median maximumFractionDigits=2}}ms
           </dd>
           <dt>
               Maximum
           </dt>
           <dd>
-              {{format-number tomography.max maximumFractionDigits=2}}ms
+              {{format-number this.tomography.max maximumFractionDigits=2}}ms
           </dd>
       </dl>
     </div>
-    <TomographyGraph @tomography={{tomography}} />
+    <TomographyGraph @tomography={{this.tomography}} />
   </div>
 </div>
 

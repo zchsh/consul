@@ -1,7 +1,7 @@
 <div id="metadata" class="tab-section">
   <div role="tabpanel">
-{{#if item.Meta}}
-  <ConsulMetadataList @items={{object-entries item.Meta}} />
+{{#if this.item.Meta}}
+  <ConsulMetadataList @items={{object-entries this.item.Meta}} />
 {{else}}
   <EmptyState>
     <BlockSlot @name="body">

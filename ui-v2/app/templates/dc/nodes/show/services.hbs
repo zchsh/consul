@@ -1,17 +1,17 @@
-{{#let item.Services as |items|}}
+{{#let this.item.Services as |items|}}
 <div id="services" class="tab-section">
   <div role="tabpanel">
   {{#if (gt items.length 0) }}
     <input type="checkbox" id="toolbar-toggle" />
     <SearchBar
       @placeholder="Search by name/port"
-      @value={{search}}
-      @onsearch={{action (mut search) value="target.value"}}
+      @value={{this.search}}
+      @onsearch={{action (mut this.search) value="target.value"}}
     />
   {{/if}}
-     <ChangeableSet @dispatcher={{searchable 'nodeservice' items}} @terms={{search}}>
+     <ChangeableSet @dispatcher={{searchable 'nodeservice' items}} @terms={{this.search}}>
       <BlockSlot @name="set" as |filtered|>
-        <ConsulServiceInstanceList @routeName="dc.services.show" @items={{filtered}} @checks={{checks}}/>
+        <ConsulServiceInstanceList @routeName="dc.services.show" @items={{filtered}} @checks={{this.checks}} />
       </BlockSlot>
       <BlockSlot @name="empty">
         <EmptyState>

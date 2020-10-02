@@ -2,8 +2,8 @@
   <div role="tabpanel">
     <section class="tags">
       <h3>Tags</h3>
-    {{#if (gt item.Tags.length 0) }}
-      <TagList @item={{item}} />
+    {{#if (gt this.item.Tags.length 0) }}
+      <TagList @item={{this.item}} />
     {{else}}
       <EmptyState>
         <BlockSlot @name="body">
@@ -16,8 +16,8 @@
     </section>
     <section class="metadata">
       <h3>Meta</h3>
-    {{#if item.Meta}}
-      <ConsulMetadataList @items={{object-entries item.Meta}} />
+    {{#if this.item.Meta}}
+      <ConsulMetadataList @items={{object-entries this.item.Meta}} />
     {{else}}
       <EmptyState>
         <BlockSlot @name="body">

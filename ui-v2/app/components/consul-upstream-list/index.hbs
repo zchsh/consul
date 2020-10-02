@@ -1,4 +1,4 @@
-<ListCollection @items={{items}} @linkable={{action "isLinkable"}} class="consul-upstream-list" as |item index|>
+<ListCollection @items={{this.items}} @linkable={{action "isLinkable"}} class="consul-upstream-list" as |item index|>
   <BlockSlot @name="header">
   {{#if (gt item.InstanceCount 0)}}
     <dl class={{item.MeshStatus}}>
@@ -19,8 +19,8 @@
         </Tooltip>
       </dd>
     </dl>
-    {{#if (and (env 'CONSUL_NSPACES_ENABLED') (not-eq item.Namespace nspace))}}
-      <a data-test-service-name href={{href-to 'nspace.dc.services.show' (concat '~' item.Namespace) dc item.Name }}>
+    {{#if (and (env 'CONSUL_NSPACES_ENABLED') (not-eq item.Namespace this.nspace))}}
+      <a data-test-service-name href={{href-to 'nspace.dc.services.show' (concat '~' item.Namespace) this.dc item.Name }}>
         {{item.Name}}
       </a>
     {{else}}
@@ -35,7 +35,7 @@
   {{/if}}
   </BlockSlot>
   <BlockSlot @name="details">
-  {{#if (and (env 'CONSUL_NSPACES_ENABLED') (not-eq item.Namespace nspace))}}
+  {{#if (and (env 'CONSUL_NSPACES_ENABLED') (not-eq item.Namespace this.nspace))}}
     <dl class="nspace">
       <dt>
         <Tooltip>

@@ -1,5 +1,5 @@
-{{#if (gt items.length 0)}}
-<ListCollection @items={{items}} @linkable={{action "isLinkable"}} class="consul-service-list" as |item index|>
+{{#if (gt this.items.length 0)}}
+<ListCollection @items={{this.items}} @linkable={{action "isLinkable"}} class="consul-service-list" as |item index|>
   <BlockSlot @name="header">
     <dl class={{item.MeshStatus}}>
       <dt>
@@ -40,8 +40,8 @@
 {{/if}}
   </BlockSlot>
   <BlockSlot @name="details">
-{{#if (and nspace (env 'CONSUL_NSPACES_ENABLED'))}}
-  {{#if (not-eq item.Namespace nspace)}}
+{{#if (and this.nspace (env 'CONSUL_NSPACES_ENABLED'))}}
+  {{#if (not-eq item.Namespace this.nspace)}}
     <dl class="nspace">
       <dt>
         <Tooltip>

@@ -1,10 +1,10 @@
 <AppView @class="error show">
     <BlockSlot @name="header">
       <h1>
-        Error {{error.status}}
+        Error {{this.error.status}}
       </h1>
     </BlockSlot>
     <BlockSlot @name="content">
-      <ErrorState @error={{error}} />
+      <ErrorState @error={{this.error}} />
     </BlockSlot>
 </AppView>

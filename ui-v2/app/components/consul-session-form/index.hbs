@@ -1,9 +1,9 @@
 <DataForm
-  @dc={{dc}}
-  @nspace={{nspace}}
-  @item={{item}}
+  @dc={{this.dc}}
+  @nspace={{this.nspace}}
+  @item={{this.item}}
   @type="session"
-  @onsubmit={{action onsubmit}}
+  @onsubmit={{action this.onsubmit}}
   as |api|
 >
   <BlockSlot @name="form">
@@ -22,11 +22,11 @@
           <dd>{{api.data.ID}}</dd>
           <dt>Behavior</dt>
           <dd>{{api.data.Behavior}}</dd>
-{{#if form.data.Delay }}
+{{#if this.form.data.Delay }}
           <dt>Delay</dt>
           <dd>{{api.data.LockDelay}}</dd>
 {{/if}}
-{{#if form.data.TTL }}
+{{#if this.form.data.TTL }}
           <dt>TTL</dt>
           <dd>{{api.data.TTL}}</dd>
 {{/if}}
@@ -39,7 +39,7 @@
         </dl>
         <ConfirmationDialog @message="Are you sure you want to invalidate this session?">
           <BlockSlot @name="action" as |confirm|>
-            <button type="button" data-test-delete class="type-delete" {{action confirm api.delete session}} disabled={{api.disabled}}>Invalidate Session</button>
+            <button type="button" data-test-delete class="type-delete" {{action confirm api.delete this.session}} disabled={{api.disabled}}>Invalidate Session</button>
           </BlockSlot>
           <BlockSlot @name="dialog" as |execute cancel message|>
             <p>

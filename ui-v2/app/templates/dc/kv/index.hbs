@@ -1,39 +1,39 @@
 {{title 'Key/Value'}}
-{{#let (or sortBy "isFolder:asc") as |sort|}}
+{{#let (or this.sortBy "isFolder:asc") as |sort|}}
   <AppView>
     <BlockSlot @name="breadcrumbs">
       <ol>
-  {{#if (not-eq parent.Key '/') }}
+  {{#if (not-eq this.parent.Key '/') }}
         <li><a href={{href-to 'dc.kv'}}>Key / Values</a></li>
   {{/if}}
-  {{#each (slice 0 -2 (split parent.Key '/')) as |breadcrumb index|}}
-        <li><a href={{href-to 'dc.kv.folder' (join '/' (append (slice 0 (add index 1) (split parent.Key '/')) ''))}}>{{breadcrumb}}</a></li>
+  {{#each (slice 0 -2 (split this.parent.Key '/')) as |breadcrumb index|}}
+        <li><a href={{href-to 'dc.kv.folder' (join '/' (append (slice 0 (add index 1) (split this.parent.Key '/')) ''))}}>{{breadcrumb}}</a></li>
   {{/each}}
       </ol>
     </BlockSlot>
     <BlockSlot @name="header">
         <h1>
-          {{#if (eq parent.Key '/')}}
+          {{#if (eq this.parent.Key '/')}}
             Key / Value
           {{else}}
-            {{take 1 (drop 1 (reverse (split parent.Key '/')))}}
+            {{take 1 (drop 1 (reverse (split this.parent.Key '/')))}}
           {{/if}}
         </h1>
         <label for="toolbar-toggle"></label>
     </BlockSlot>
     <BlockSlot @name="toolbar">
-  {{#if (gt items.length 0) }}
+  {{#if (gt this.items.length 0) }}
           <form class="filter-bar with-sort">
             <FreetextFilter
-              @onsearch={{action (mut search) value="target.value"}}
-              @value={{search}}
+              @onsearch={{action (mut this.search) value="target.value"}}
+              @value={{this.search}}
               @placeholder="Search"
             />
             <div class="sort">
               <PopoverSelect
                 class="type-sort"
                 @position="right"
-                @onchange={{action (mut sortBy) value='target.selected'}}
+                @onchange={{action (mut this.sortBy) value='target.selected'}}
                 @multiple={{false}}
               as |components|>
                 <BlockSlot @name="selected">
@@ -68,25 +68,25 @@
   {{/if}}
     </BlockSlot>
     <BlockSlot @name="actions">
-  {{#if (not-eq parent.Key '/') }}
-        <a data-test-create href="{{href-to 'dc.kv.create' parent.Key}}" class="type-create">Create</a>
+  {{#if (not-eq this.parent.Key '/') }}
+        <a data-test-create href="{{href-to 'dc.kv.create' this.parent.Key}}" class="type-create">Create</a>
   {{else}}
         <a data-test-create href="{{href-to 'dc.kv.root-create'}}" class="type-create">Create</a>
   {{/if}}
     </BlockSlot>
     <BlockSlot @name="content">
-    {{#let (sort-by (comparator 'kv' sort) items) as |sorted|}}
-      <ChangeableSet @dispatcher={{searchable 'kv' sorted}} @terms={{search}}>
+    {{#let (sort-by (comparator 'kv' sort) this.items) as |sorted|}}
+      <ChangeableSet @dispatcher={{searchable 'kv' sorted}} @terms={{this.search}}>
         <BlockSlot @name="content" as |filtered|>
           <ConsulKvList
             @items={{filtered}}
-            @parent={{parent}}
+            @parent={{this.parent}}
             @ondelete={{refresh-route}}
           >
             <EmptyState @allowLogin={{true}}>
               <BlockSlot @name="header">
                 <h2>
-                  {{#if (gt items.length 0)}}
+                  {{#if (gt this.items.length 0)}}
                     No K/V pairs found
                   {{else}}
                     Welcome to Key/Value
@@ -95,7 +95,7 @@
               </BlockSlot>
               <BlockSlot @name="body">
                 <p>
-                  {{#if (gt items.length 0)}}
+                  {{#if (gt this.items.length 0)}}
                     No K/V pairs where found matching that search, or you may not have access to view the K/V pairs you are searching for.
                   {{else}}
                     You don't have any K/V pairs, or you may not have access to view K/V pairs yet.

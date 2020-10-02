@@ -1,18 +1,18 @@
-{{#if item.Kind}}
-  {{#let (titleize (humanize item.Kind)) as |Name|}}
-    {{#if withInfo}}
+{{#if this.item.Kind}}
+  {{#let (titleize (humanize this.item.Kind)) as |Name|}}
+    {{#if this.withInfo}}
         <dl class="tooltip-panel">
           <dt>
-            <span data-test-kind={{item.Kind}} class="consul-kind">
+            <span data-test-kind={{this.item.Kind}} class="consul-kind">
               {{Name}}
             </span>
           </dt>
           <dd>
             <MenuPanel @position="left">
               <BlockSlot @name="header">
-                {{#if (eq item.Kind 'ingress-gateway')}}
+                {{#if (eq this.item.Kind 'ingress-gateway')}}
                   Ingress gateways enable ingress traffic from services outside the Consul service mesh to services inside the Consul service mesh.
-                {{else if (eq item.Kind 'terminating-gateway')}}
+                {{else if (eq this.item.Kind 'terminating-gateway')}}
                   Terminating gateways allow connect-enabled services in Consul service mesh to communicate with services outside the service mesh.
                 {{else}}
                   Mesh gateways enable routing of Connect traffic between different Consul datacenters.
@@ -20,9 +20,9 @@
               </BlockSlot>
               <BlockSlot @name="menu">
                 <li role="separator">
-                  {{#if (eq item.Kind 'ingress-gateway')}}
+                  {{#if (eq this.item.Kind 'ingress-gateway')}}
                       About Ingress gateways
-                  {{else if (eq item.Kind 'terminating-gateway')}}
+                  {{else if (eq this.item.Kind 'terminating-gateway')}}
                       About Terminating gateways
                   {{else}}
                       About Mesh gateways
@@ -35,7 +35,7 @@
             )
           ) as |link|}}
                 <li role="none" class="learn-link">
-                  <a tabindex="-1" role="menuitem" href={{concat (env 'CONSUL_DOCS_LEARN_URL') (get link item.Kind)}} rel="noopener noreferrer" target="_blank">
+                  <a tabindex="-1" role="menuitem" href={{concat (env 'CONSUL_DOCS_LEARN_URL') (get link this.item.Kind)}} rel="noopener noreferrer" target="_blank">
                     Learn guides
                   </a>
                 </li>
@@ -47,28 +47,28 @@
             )
           ) as |link|}}
                 <li role="none" class="docs-link">
-                  <a tabindex="-1" role="menuitem" href={{concat (env 'CONSUL_DOCS_URL') (get link item.Kind)}} rel="noopener noreferrer" target="_blank">
+                  <a tabindex="-1" role="menuitem" href={{concat (env 'CONSUL_DOCS_URL') (get link this.item.Kind)}} rel="noopener noreferrer" target="_blank">
                     Documentation
                   </a>
                 </li>
                 <li role="separator">
                   Other gateway types
                 </li>
-              {{#if (not-eq item.Kind 'mesh-gateway')}}
+              {{#if (not-eq this.item.Kind 'mesh-gateway')}}
                 <li role="none" class="docs-link">
                   <a tabindex="-1" role="menuitem" href={{concat (env 'CONSUL_DOCS_URL') (get link 'mesh-gateway')}} rel="noopener noreferrer" target="_blank">
                     Mesh gateways
                   </a>
                 </li>
               {{/if}}
-              {{#if (not-eq item.Kind 'terminating-gateway')}}
+              {{#if (not-eq this.item.Kind 'terminating-gateway')}}
                 <li role="none" class="docs-link">
                   <a tabindex="-1" role="menuitem" href={{concat (env 'CONSUL_DOCS_URL') (get link 'terminating-gateway')}} rel="noopener noreferrer" target="_blank">
                     Terminating gateways
                   </a>
                 </li>
               {{/if}}
-              {{#if (not-eq item.Kind 'ingress-gateway')}}
+              {{#if (not-eq this.item.Kind 'ingress-gateway')}}
                 <li role="none" class="docs-link">
                   <a tabindex="-1" role="menuitem" href={{concat (env 'CONSUL_DOCS_URL') (get link 'ingress-gateway')}} rel="noopener noreferrer" target="_blank">
                     Ingress gateways
@@ -81,7 +81,7 @@
           </dd>
         </dl>
       {{else}}
-          <span data-test-kind={{item.Kind}} class="consul-kind">
+          <span data-test-kind={{this.item.Kind}} class="consul-kind">
             {{Name}}
           </span>
       {{/if}}

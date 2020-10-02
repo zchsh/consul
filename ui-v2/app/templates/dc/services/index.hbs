@@ -1,44 +1,42 @@
 {{title 'Services'}}
-<EventSource @src={{items}} />
+<EventSource @src={{this.items}} />
 {{#let (hash
-  statuses=(if status (split status ',') undefined)
-  types=(if type (split type ',') undefined)
-  sources=(if source (split source ',') undefined)
+  statuses=(if this.status (split this.status ',') undefined)
+  types=(if this.type (split this.type ',') undefined)
+  sources=(if this.source (split this.source ',') undefined)
 ) as |filters|}}
-  {{#let (or sortBy "Name:asc") as |sort|}}
+  {{#let (or this.sortBy "Name:asc") as |sort|}}
     <AppView>
       <BlockSlot @name="notification" as |status type|>
         {{partial 'dc/services/notifications'}}
       </BlockSlot>
       <BlockSlot @name="header">
           <h1>
-            Services <em>{{format-number services.length}} total</em>
+            Services <em>{{format-number this.services.length}} total</em>
           </h1>
           <label for="toolbar-toggle"></label>
       </BlockSlot>
       <BlockSlot @name="toolbar">
-        {{#if (gt services.length 0) }}
+        {{#if (gt this.services.length 0) }}
           <ConsulServiceSearchBar
-            @sources={{externalSources}}
-            @search={{search}}
-            @onsearch={{action (mut search) value="target.value"}}
-
+            @sources={{this.externalSources}}
+            @search={{this.search}}
+            @onsearch={{action (mut this.search) value="target.value"}}
             @sort={{sort}}
-            @onsort={{action (mut sortBy) value="target.selected"}}
-
+            @onsort={{action (mut this.sortBy) value="target.selected"}}
             @filter={{filters}}
             @onfilter={{hash
-              status=(action (mut status) value="target.selectedItems")
-              type=(action (mut type) value="target.selectedItems")
-              source=(action (mut source) value="target.selectedItems")
+              status=(action (mut this.status) value="target.selectedItems")
+              type=(action (mut this.type) value="target.selectedItems")
+              source=(action (mut this.source) value="target.selectedItems")
             }}
           />
         {{/if}}
       </BlockSlot>
       <BlockSlot @name="content">
-{{#let (filter (filter-predicate 'service' filters) services) as |filtered|}}
+{{#let (filter (filter-predicate 'service' filters) this.services) as |filtered|}}
   {{#let (sort-by (comparator 'service' sort) filtered) as |sorted|}}
-        <ChangeableSet @dispatcher={{searchable 'service' sorted}} @terms={{search}}>
+        <ChangeableSet @dispatcher={{searchable 'service' sorted}} @terms={{this.search}}>
           <BlockSlot @name="set" as |searched|>
             <ConsulServiceList @items={{searched}} />
           </BlockSlot>
@@ -46,7 +44,7 @@
             <EmptyState @allowLogin={{true}}>
               <BlockSlot @name="header">
                 <h2>
-                  {{#if (gt services.length 0)}}
+                  {{#if (gt this.services.length 0)}}
                     No services found
                   {{else}}
                     Welcome to Services
@@ -55,7 +53,7 @@
               </BlockSlot>
               <BlockSlot @name="body">
                 <p>
-                  {{#if (gt services.length 0)}}
+                  {{#if (gt this.services.length 0)}}
                     No services where found matching that search, or you may not have access to view the services you are searching for.
                   {{else}}
                     There don't seem to be any registered services, or you may not have access to view services yet.

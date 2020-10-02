@@ -1,4 +1,4 @@
-<ChildSelector ...attributes @repo={{repo}} @dc={{dc}} @nspace={{nspace}} @type="policy" @placeholder="Search for policy" @items={{items}}>
+<ChildSelector ...attributes @repo={{this.repo}} @dc={{this.dc}} @nspace={{this.nspace}} @type="policy" @placeholder="Search for policy" @items={{this.items}}>
   {{yield}}
   <BlockSlot @name="label">
     Apply an existing policy
@@ -21,16 +21,16 @@
           <h2>New Policy</h2>
         </BlockSlot>
         <BlockSlot @name="body">
-          <PolicyForm @form={{form}} @nspace={{nspace}} @dc={{dc}} @allowServiceIdentity={{allowServiceIdentity}} />
+          <PolicyForm @form={{form}} @nspace={{this.nspace}} @dc={{this.dc}} @allowServiceIdentity={{this.allowServiceIdentity}} />
         </BlockSlot>
         <BlockSlot @name="actions" as |close|>
-          <button type="submit" {{action 'save' item items (queue (action close) (action 'reset'))}} disabled={{if (or item.isSaving item.isPristine item.isInvalid) 'disabled'}}>
-            {{#if item.isSaving }}
+          <button type="submit" {{action 'save' this.item this.items (queue (action close) (action 'reset'))}} disabled={{if (or this.item.isSaving this.item.isPristine this.item.isInvalid) 'disabled'}}>
+            {{#if this.item.isSaving }}
               <div class="progress indeterminate"></div>
             {{/if}}
             <span>Create and apply</span>
           </button>
-          <button type="reset" disabled={{if item.isSaving 'disabled'}} {{action (queue (action close) (action 'reset'))}}>Cancel</button>
+          <button type="reset" disabled={{if this.item.isSaving 'disabled'}} {{action (queue (action close) (action 'reset'))}}>Cancel</button>
         </BlockSlot>
       </ModalDialog>
     {{/yield-slot}}
@@ -42,7 +42,7 @@
     <TabularDetails
         data-test-policies
         @onchange={{action 'open'}}
-        @items={{sort-by 'CreateTime:desc' 'Name:asc' items}} as |item index|
+        @items={{sort-by 'CreateTime:desc' 'Name:asc' this.items}} as |item index|
     >
       <BlockSlot @name="header">
         <th>Name</th>
@@ -59,8 +59,8 @@
       <BlockSlot @name="details">
 {{#if (eq item.template '')}}
         <DataSource
-          @src={{concat '/' item.Namespace '/' dc '/policy/' item.ID}}
-          @onchange={{action (mut loadedItem) value="data"}}
+          @src={{concat '/' item.Namespace '/' this.dc '/policy/' item.ID}}
+          @onchange={{action (mut this.loadedItem) value="data"}}
           @loading="lazy"
         />
 {{/if}}
@@ -75,7 +75,7 @@
           <dl>
             <dt>Datacenters:</dt>
             <dd>
-              {{join ', ' (policy/datacenters (or loadedItem item))}}
+              {{join ', ' (policy/datacenters (or this.loadedItem item))}}
             </dd>
           </dl>
 {{/if}}
@@ -83,20 +83,20 @@
             <span>Rules <a href="{{env 'CONSUL_DOCS_URL'}}/guides/acl.html#rule-specification" rel="help noopener noreferrer" target="_blank">(HCL Format)</a></span>
 {{#if (eq item.template 'service-identity')}}
             <CodeEditor @syntax="hcl" @readonly={{true}}>
-              {{~component 'service-identity' nspace=nspace name=item.Name~}}
+              {{~component 'service-identity' nspace=this.nspace name=item.Name~}}
             </CodeEditor>
 {{else if (eq item.template 'node-identity')}}
             <CodeEditor @syntax="hcl" @readonly={{true}}>
               {{~component 'node-identity' name=item.Name~}}
             </CodeEditor>
 {{else}}
-            <CodeEditor @syntax="hcl" @readonly={{true}} @value={{or loadedItem.Rules item.Rules}} />
+            <CodeEditor @syntax="hcl" @readonly={{true}} @value={{or this.loadedItem.Rules item.Rules}} />
 {{/if}}
           </label>
           <div>
             <ConfirmationDialog @message="Are you sure you want to remove this policy from this token?">
               <BlockSlot @name="action" as |confirm|>
-                <button data-test-delete type="button" class="type-delete" {{action confirm 'remove' item items}}>Remove</button>
+                <button data-test-delete type="button" class="type-delete" {{action confirm 'remove' item this.items}}>Remove</button>
               </BlockSlot>
               <BlockSlot @name="dialog" as |execute cancel message|>
                 <p>
