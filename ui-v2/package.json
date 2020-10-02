@@ -99,6 +99,7 @@
     "ember-load-initializers": "^2.1.1",
     "ember-math-helpers": "^2.4.0",
     "ember-maybe-import-regenerator": "^0.1.6",
+    "ember-no-implicit-this-codemod": "^2.0.0",
     "ember-on-helper": "^0.1.0",
     "ember-page-title": "^5.2.3",
     "ember-power-select": "^4.0.3",
@@ -133,6 +134,9 @@
     "tape": "^5.0.1",
     "text-encoding": "^0.7.0",
     "torii": "^0.10.1"
+  },
+  "resolutions": {
+    "puppeteer": "^5.1.0"
   },
   "engines": {
     "node": "10.* || >= 12"
