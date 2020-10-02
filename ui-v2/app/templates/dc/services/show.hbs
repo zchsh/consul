@@ -47,7 +47,7 @@
   </BlockSlot>
   <BlockSlot @name="actions">
     {{#if this.urls.service}}
-      {{#templated-anchor this.data-test-dashboard-anchor href=this.urls.service vars=(hash Datacenter=this.dc Service=(hash Name=this.item.Service.Service)) rel="external"}}Open Dashboard{{/templated-anchor}}
+      {{#templated-anchor data-test-dashboard-anchor href=this.urls.service vars=(hash Datacenter=this.dc Service=(hash Name=this.item.Service.Service)) rel="external"}}Open Dashboard{{/templated-anchor}}
     {{/if}}
   </BlockSlot>
   <BlockSlot @name="content">
