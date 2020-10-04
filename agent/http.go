@@ -16,6 +16,10 @@ import (
 
 	"github.com/NYTimes/gziphandler"
 	"github.com/armon/go-metrics"
+	"github.com/hashicorp/go-cleanhttp"
+	"github.com/mitchellh/mapstructure"
+	"github.com/pkg/errors"
+
 	"github.com/hashicorp/consul/acl"
 	"github.com/hashicorp/consul/agent/cache"
 	"github.com/hashicorp/consul/agent/config"
@@ -25,9 +29,6 @@ import (
 	"github.com/hashicorp/consul/api"
 	"github.com/hashicorp/consul/lib"
 	"github.com/hashicorp/consul/logging"
-	"github.com/hashicorp/go-cleanhttp"
-	"github.com/mitchellh/mapstructure"
-	"github.com/pkg/errors"
 )
 
 // MethodNotAllowedError should be returned by a handler when the HTTP method is not allowed.
@@ -830,7 +831,7 @@ func (s *HTTPHandlers) parseConsistency(resp http.ResponseWriter, req *http.Requ
 	if _, ok := query["leader"]; ok {
 		defaults = false
 	}
-	if _, ok := query["cached"]; ok {
+	if _, ok := query["cached"]; ok && s.agent.config.HTTPUseCache {
 		b.SetUseCache(true)
 		defaults = false
 	}
@@ -992,7 +993,7 @@ func parseMetaPair(raw string) (string, string) {
 
 // parseInternal is a convenience method for endpoints that need
 // to use both parseWait and parseDC.
-func (s *HTTPHandlers) parseInternal(resp http.ResponseWriter, req *http.Request, dc *string, b structs.QueryOptionsCompat) bool {
+func (s *HTTPHandlers) parse(resp http.ResponseWriter, req *http.Request, dc *string, b structs.QueryOptionsCompat) bool {
 	s.parseDC(req, dc)
 	var token string
 	s.parseTokenWithDefault(req, &token)
@@ -1007,12 +1008,6 @@ func (s *HTTPHandlers) parseInternal(resp http.ResponseWriter, req *http.Request
 		return true
 	}
 	return parseWait(resp, req, b)
-}
-
-// parse is a convenience method for endpoints that need
-// to use both parseWait and parseDC.
-func (s *HTTPHandlers) parse(resp http.ResponseWriter, req *http.Request, dc *string, b structs.QueryOptionsCompat) bool {
-	return s.parseInternal(resp, req, dc, b)
 }
 
 func (s *HTTPHandlers) checkWriteAccess(req *http.Request) error {
