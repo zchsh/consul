@@ -52,8 +52,6 @@ func (s *Server) stopConnectLeader() {
 	s.leaderRoutineManager.Stop(caRootPruningRoutineName)
 
 	// If the provider implements NeedsStop, we call Stop to perform any shutdown actions.
-	s.caManager.caProviderReconfigurationLock.Lock()
-	defer s.caManager.caProviderReconfigurationLock.Unlock()
 	provider, _ := s.caManager.getCAProvider()
 	if provider != nil {
 		if needsStop, ok := provider.(ca.NeedsStop); ok {
