@@ -1,6 +1,5 @@
 import { inject as service } from '@ember/service';
 import Route from 'consul-ui/routing/route';
-import { hash } from 'rsvp';
 
 export default class IndexRoute extends Route {
   @service('data-source/service') data;
@@ -16,7 +15,7 @@ export default class IndexRoute extends Route {
     },
   };
 
-  model(params) {
+  async model(params, transition) {
     let terms = params.s || '';
     // we check for the old style `status` variable here
     // and convert it to the new style filter=status:critical
@@ -31,14 +30,16 @@ export default class IndexRoute extends Route {
           .trim();
       }
     }
+    terms = terms !== '' ? terms.split('\n') : [];
     const nspace = this.modelFor('nspace').nspace.substr(1);
     const dc = this.modelFor('dc').dc.Name;
-    return hash({
-      nspace: nspace,
-      dc: dc,
-      terms: terms !== '' ? terms.split('\n') : [],
-      items: this.data.source(uri => uri`/${nspace}/${dc}/services`),
-    });
+    const items = await this.data.source(uri => uri`/${nspace}/${dc}/services`);
+    return {
+      dc,
+      nspace,
+      terms,
+      items,
+    };
   }
 
   setupController(controller, model) {
