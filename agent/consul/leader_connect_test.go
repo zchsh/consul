@@ -175,9 +175,10 @@ func waitForActiveCARoot(t *testing.T, srv *Server, expect *structs.CARoot) {
 }
 
 func getCAProviderWithLock(s *Server) (ca.Provider, *structs.CARoot) {
-	s.caProviderReconfigurationLock.Lock()
-	defer s.caProviderReconfigurationLock.Unlock()
-	return s.getCAProvider()
+	// TODO: WHAT?
+	s.caManager.caProviderReconfigurationLock.Lock()
+	defer s.caManager.caProviderReconfigurationLock.Unlock()
+	return s.caManager.getCAProvider()
 }
 
 func TestLeader_Vault_PrimaryCA_IntermediateRenew(t *testing.T) {

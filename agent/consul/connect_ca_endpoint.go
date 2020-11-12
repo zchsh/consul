@@ -207,7 +207,7 @@ func (s *ConnectCA) ConfigurationSet(
 
 		// If the config has been committed, update the local provider instance
 		cleanupNewProvider = false
-		s.srv.setCAProvider(newProvider, newActiveRoot)
+		s.srv.caManager.setCAProvider(newProvider, newActiveRoot)
 
 		s.logger.Info("CA provider config updated")
 
@@ -220,7 +220,7 @@ func (s *ConnectCA) ConfigurationSet(
 
 	// First up, sanity check that the current provider actually supports
 	// cross-signing.
-	oldProvider, _ := s.srv.getCAProvider()
+	oldProvider, _ := s.srv.caManager.getCAProvider()
 	if oldProvider == nil {
 		return fmt.Errorf("internal error: CA provider is nil")
 	}
@@ -304,7 +304,7 @@ func (s *ConnectCA) ConfigurationSet(
 	// If the config has been committed, update the local provider instance
 	// and call teardown on the old provider
 	cleanupNewProvider = false
-	s.srv.setCAProvider(newProvider, newActiveRoot)
+	s.srv.caManager.setCAProvider(newProvider, newActiveRoot)
 
 	if err := oldProvider.Cleanup(); err != nil {
 		s.logger.Warn("failed to clean up old provider", "provider", config.Provider)
@@ -438,7 +438,7 @@ func (s *ConnectCA) SignIntermediate(
 		return acl.ErrPermissionDenied
 	}
 
-	provider, _ := s.srv.getCAProvider()
+	provider, _ := s.srv.caManager.getCAProvider()
 	if provider == nil {
 		return fmt.Errorf("internal error: CA provider is nil")
 	}
