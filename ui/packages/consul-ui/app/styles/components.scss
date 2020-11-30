@@ -14,7 +14,6 @@
 @import './components/buttons';
 @import './components/composite-row';
 @import './components/secret-button';
-@import './components/tabs';
 @import './components/pill';
 @import './components/table';
 @import './components/tooltip';
@@ -53,6 +52,7 @@
 
 @import 'consul-ui/components/notice';
 @import 'consul-ui/components/modal-dialog';
+@import 'consul-ui/components/tab-nav';
 
 @import 'consul-ui/components/consul/tomography/graph';
 @import 'consul-ui/components/consul/discovery-chain';
